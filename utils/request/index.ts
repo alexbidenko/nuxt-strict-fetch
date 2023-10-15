@@ -33,7 +33,7 @@ const mergeOptions = (...list: (Options | Options[] | undefined)[]): Options =>
     };
   }, {});
 
-export const request = {
+export const StrictFetch = {
   init: (config: {
     app: NuxtApp;
     options: Options;
@@ -168,7 +168,7 @@ export const request = {
             undefined,
         ]);
 
-        const data = await request.execute<R>(
+        const data = await StrictFetch.execute<R>(
           typeof url === 'function' ? url(params as P) : url,
           mergeOptions(baseOptions, {
             headers: cookies ? { Cookie: cookies } : {},
