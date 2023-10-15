@@ -133,12 +133,12 @@ export const StrictFetch = {
     Q extends Record<string, string> | undefined = undefined,
   >({
     url,
-    method,
+    method = HTTPMethod.get,
     schemas,
     options = {},
   }: {
     url: string | ((params: P) => string);
-    method: HTTPMethod;
+    method?: HTTPMethod;
     schemas?: SchemasType<R, B, P, Q>;
     options?: Options | Options[];
   }) => {
