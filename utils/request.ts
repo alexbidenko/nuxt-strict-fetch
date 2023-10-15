@@ -1,3 +1,3 @@
 export * from './request/types';
 export * from './request/cases';
-export * from './request';
+export * from './request/base';
