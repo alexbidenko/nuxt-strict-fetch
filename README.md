@@ -1,0 +1,1 @@
+# Nuxt Strict Fetch
