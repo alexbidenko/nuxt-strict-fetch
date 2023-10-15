@@ -1,5 +1,3 @@
-import type { RuntimeConfig } from 'nuxt/schema';
-
 import type { NuxtApp } from '#app/nuxt';
 import { caseTransfer } from './cases';
 import {

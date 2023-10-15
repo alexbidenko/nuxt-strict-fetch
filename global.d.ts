@@ -1,4 +1,4 @@
-import type {NuxtPluginType} from "~/utils/request/types";
+import type {NuxtPluginType} from "./utils/request/types";
 
 declare module '#app' {
     interface NuxtApp extends NuxtPluginType {}
