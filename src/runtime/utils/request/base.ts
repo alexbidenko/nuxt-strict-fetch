@@ -1,47 +1,38 @@
-import type { NuxtApp } from '#app/nuxt';
 import { caseTransfer } from './cases';
-import {
-  Case,
-  FetchError,
+import {mergeOptions} from "./utils";
+import type {
   HookKey,
-  HTTPError,
-  HTTPMethod,
   Options,
   PluginOptionsType,
   PreparedRequestType,
-  RequestError,
-  ResponseError,
   SchemasType,
 } from './types';
-
-const mergeOptions = (...list: (Options | Options[] | undefined)[]): Options =>
-  list.reduce<Options>((acc, options) => {
-    const mergedOptions = Array.isArray(options)
-      ? mergeOptions(...options)
-      : options;
-    if (!mergedOptions) return acc;
-    return {
-      ...acc,
-      ...mergedOptions,
-      headers: { ...(acc.headers || {}), ...(mergedOptions.headers || {}) },
-      baseURLMapper: [
-        ...(acc.baseURLMapper || []),
-        ...(mergedOptions.baseURLMapper || []),
-      ],
-    };
-  }, {});
+import {
+  Case,
+  FetchError,
+  HTTPError,
+  HTTPMethod,
+  RequestError,
+  ResponseError,
+} from './types';
 
 export const StrictFetch = {
-  init: (config: {
-    app: NuxtApp;
-    options: Options;
-  }) => {
-    config.app.provide('strictFetch', {
-      options: config.options,
+  autoInit: () => {
+    const nuxtApp = useNuxtApp();
+
+    nuxtApp.provide('strictFetch', {
+      options: {},
       orderRequests: {},
       orderHooks: {},
       methodSignals: {},
     } as PluginOptionsType)
+  },
+
+  // TODO: need opportunity to replace default $fetch method for custom ($csrfFetch from nuxt-security for example)
+  init: (options: Options) => {
+    const nuxtApp = useNuxtApp();
+
+    Object.assign(nuxtApp.$strictFetch.options, options);
   },
 
   hooks: {
@@ -100,7 +91,7 @@ export const StrictFetch = {
       signal: methodKey
         ? pluginOptions?.methodSignals[methodKey]?.signal
         : null,
-      baseURL: options.baseURL || (mapper?.value ?? '/api/'),
+      baseURL: mapper?.value || options.baseURL,
       ...options,
     }).finally(() => {
       if (!pluginOptions) return;
@@ -151,6 +142,7 @@ export const StrictFetch = {
       const baseOptions = mergeOptions(
         options,
         additionalOptions,
+        nuxtApp?.$config.public.strictFetchOptions,
         nuxtApp?.$strictFetch.options,
       );
 
@@ -169,7 +161,7 @@ export const StrictFetch = {
         const data = await StrictFetch.execute<R>(
           typeof url === 'function' ? url(params as P) : url,
           mergeOptions(baseOptions, {
-            headers: cookies ? { Cookie: cookies } : {},
+            headers: baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {},
             method,
             body: body && caseTransfer(body, Case.snake),
             onRequestError(context) {

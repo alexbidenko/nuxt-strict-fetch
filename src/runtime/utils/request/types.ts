@@ -19,6 +19,7 @@ export type Options = NitroFetchOptions<string> & {
   orderKey?: string;
   methodKey?: string;
   groupKey?: string;
+  proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
   baseURLMapper?: URLMapItemType[];
   onError?: (error: RequestError | ResponseError) => void;
