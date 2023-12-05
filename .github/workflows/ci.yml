@@ -16,12 +16,8 @@ jobs:
         with:
           node-version: '20.x'
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
+      - run: npm ci
 
-      - run: pnpm i --frozen-lockfile
-
-      - run: pnpm release
+      - run: npm release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,5 +1,4 @@
-import type { NitroFetchOptions } from 'nitropack';
-import type { FetchContext } from 'ofetch';
+import type { FetchContext, FetchOptions } from 'ofetch';
 import type { Schema } from 'yup';
 
 export enum Case {
@@ -15,7 +14,8 @@ export enum HTTPMethod {
   delete = 'delete',
 }
 
-export type Options = NitroFetchOptions<string> & {
+export type Options = Omit<FetchOptions, 'method'> & {
+  method?: HTTPMethod;
   orderKey?: string;
   methodKey?: string;
   groupKey?: string;
