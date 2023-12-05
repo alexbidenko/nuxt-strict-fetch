@@ -33,9 +33,9 @@ yarn add --dev nuxt-strict-fetch
 npm install --save-dev nuxt-strict-fetch
 ```
 
-2. Add `my-module` to the `modules` section of `nuxt.config.ts`
+2. Add `nuxt-strict-fetch` to the `modules` section of `nuxt.config.ts`
 
-```js
+```ts
 export default defineNuxtConfig({
   modules: [
     'nuxt-strict-fetch'
@@ -44,6 +44,147 @@ export default defineNuxtConfig({
 ```
 
 That's it! You can now use Nuxt Strict Fetch in your Nuxt app ✨
+
+## Module Options
+
+```ts
+export default defineNuxtConfig({
+  modules: [
+    'nuxt-strict-fetch'
+  ],
+  strictFetch: {
+    // base URL for all requests
+    baseURL: '/api/',
+    // check path prefix and replace prefix and baseURL
+    // for example:
+    // StrictFetch.prepare({ url: 'external' })
+    // will be converted to:
+    // StrictFetch.prepare({ url: 'https://external.com/api' })
+    baseURLMapper: [
+      {
+        prefix: /^external/,
+        value: 'https://external.com/api'
+      }
+    ],
+  },
+})
+```
+
+## Plugin Setup
+
+If you wish to define some global options for all requests in plugin, you can use the `StrictFetch.init`:
+
+```ts
+export default defineNuxtPlugin(() => {
+  StrictFetch.init({
+    onRequest(context) {
+      context.options.headers = {
+        ...context.options.headers,
+        Custom: 'Value',
+      };
+    }
+  });
+});
+```
+
+## Define Methods
+
+Nuxt Strict Fetch module assumes the following method declaration:
+
+```ts
+// ~/api/common.ts for example
+
+type Filter = { name?: string };
+
+type Item = { id: number; name: string; };
+
+type List = { items: Item[] };
+
+type CreateItem = { name: string; };
+
+const CommonAPI = {
+  list: StrictFetch.prepare<List, null, null, Filter>({
+    url: 'list',
+  }),
+  create: StrictFetch.prepare<Item, CreateItem>({
+    url: 'list',
+    method: HTTPMethod.post,
+  }),
+  details: StrictFetch.prepare<Item, null, { id: number }>({
+    url: ({ id }) => `list/${id}`,
+  }),
+}
+```
+
+`prepare` method has the following generic types:
+
+```ts
+StrictFetch.prepare<R /* response body */, B /* request body */, P /* request params */, Q /* request query */>
+```
+
+Also, you may define API with validation schemas:
+
+```ts
+// ~/api/common.ts for example
+import * as yup from 'yup';
+
+const filterSchema = yup.object().shape({ name: yup.string() });
+
+const itemSchema = yup.object().required().shape({
+  id: yup.string().required(),
+  name: yup.string().required(),
+});
+
+const listSchema = yup.array().required().of(itemSchema);
+
+const createItemBodySchema = yup.object().required().shape({
+  name: yup.string().required(),
+});
+
+const detailsParamsSchema = yup.object().required().shape({
+  id: yup.number().required(),
+});
+
+const CommonAPI = {
+  list: StrictFetch.prepare({
+    url: 'list',
+    schemas: { response: listSchema, query: filterSchema },
+  }),
+  create: StrictFetch.prepare({
+    url: 'list',
+    method: HTTPMethod.post,
+    schemas: { response: itemSchema, body: createItemBodySchema },
+  }),
+  details: StrictFetch.prepare({
+    url: ({ id }) => `list/${id}`,
+    schemas: { response: itemSchema, params: detailsParamsSchema },
+  }),
+}
+```
+
+The second way also provide `useRequest` composable validation feature.
+
+## Composables
+
+Module provides the following composable methods:
+- `useRequest` - method for using API method validation, state and TypeScript supporting for data.
+
+```ts
+const name = ref('');
+
+const {
+  execute, // execute request after validation (execution will return undefined if validation failed or loading is processed)
+  parameters, // reactive data provided to second useRequest argument
+  isValid, // reactive variable for validation result
+  isLoading, // reactive variable for loading state
+} = useRequest(CommonAPI.create, () => ({
+  body: { name: name.value },
+}));
+
+const onSubmit = () => {
+  execute()?.then( /* ... */ ).catch( /* ... */ );
+};
+```
 
 ## Development
 
