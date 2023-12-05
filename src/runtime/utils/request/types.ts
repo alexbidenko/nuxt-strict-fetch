@@ -1,5 +1,9 @@
-import type { FetchContext, FetchOptions } from 'ofetch';
 import type { Schema } from 'yup';
+
+// TODO: import types from ofetch not working correctly
+type InitialFetchOptions = Parameters<typeof $fetch.create>[0];
+
+type InitialFetchContext = Parameters<NonNullable<InitialFetchOptions['onRequest']>>[0]
 
 export enum Case {
   camel,
@@ -14,7 +18,7 @@ export enum HTTPMethod {
   delete = 'delete',
 }
 
-export type Options = Omit<FetchOptions, 'method'> & {
+export type Options = InitialFetchOptions & {
   method?: HTTPMethod;
   orderKey?: string;
   methodKey?: string;
@@ -81,14 +85,14 @@ export enum HTTPError {
 
 export class FetchError extends Error {
   name = 'FetchError';
-  context?: FetchContext;
+  context?: InitialFetchContext;
   body?: ErrorBodyType;
 
   constructor(message: string) {
     super(message);
   }
 
-  from(context: FetchContext, body?: ErrorBodyType) {
+  from(context: InitialFetchContext, body?: ErrorBodyType) {
     this.context = context;
     this.body = body;
     return this;
