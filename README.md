@@ -1,12 +1,3 @@
-<!--
-Get your module up and running quickly.
-
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
-
 # Nuxt Strict Fetch
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -29,17 +20,17 @@ My new Nuxt module for doing amazing things.
 
 ## Quick Setup
 
-1. Add `my-module` dependency to your project
+1. Add `nuxt-strict-fetch` dependency to your project
 
 ```bash
 # Using pnpm
-pnpm add -D my-module
+pnpm add -D nuxt-strict-fetch
 
 # Using yarn
-yarn add --dev my-module
+yarn add --dev nuxt-strict-fetch
 
 # Using npm
-npm install --save-dev my-module
+npm install --save-dev nuxt-strict-fetch
 ```
 
 2. Add `my-module` to the `modules` section of `nuxt.config.ts`
@@ -47,12 +38,12 @@ npm install --save-dev my-module
 ```js
 export default defineNuxtConfig({
   modules: [
-    'my-module'
+    'nuxt-strict-fetch'
   ]
 })
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+That's it! You can now use Nuxt Strict Fetch in your Nuxt app ✨
 
 ## Development
 
