@@ -166,9 +166,15 @@ const {
   parameters, // reactive data provided to second useRequest argument
   isValid, // reactive variable for validation result
   isLoading, // reactive variable for loading state
-} = useRequest(CommonAPI.create, () => ({
-  body: { name: name.value },
-}));
+} = useRequest(
+  CommonAPI.create,
+  () => ({
+    body: { name: name.value },
+  }),
+  {
+    validation: () => false, // additional validation that will be included in isValid variable
+  },
+);
 
 const onSubmit = () => {
   execute()?.then( /* ... */ ).catch( /* ... */ );

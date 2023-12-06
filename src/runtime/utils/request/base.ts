@@ -15,6 +15,7 @@ import {
   RequestError,
   ResponseError,
 } from './types';
+import { useNuxtApp } from '#imports';
 
 export const StrictFetch = {
   autoInit: () => {
