@@ -18,6 +18,6 @@ jobs:
 
       - run: npm ci
 
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+      - run: npm set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
+
+      - run: npm run release
