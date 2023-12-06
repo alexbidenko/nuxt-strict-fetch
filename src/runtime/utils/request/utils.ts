@@ -37,9 +37,5 @@ export const mergeOptions = (...list: (Options | Options[] | undefined)[]): Opti
       } : {}),
       // TODO: headers might be function for global dynamic headers (like Authorization header for example)
       headers: { ...(acc.headers || {}), ...(mergedOptions.headers || {}) },
-      baseURLMapper: [
-        ...(acc.baseURLMapper || []),
-        ...(mergedOptions.baseURLMapper || []),
-      ],
     };
   }, {});

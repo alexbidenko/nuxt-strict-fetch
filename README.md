@@ -55,17 +55,6 @@ export default defineNuxtConfig({
   strictFetch: {
     // base URL for all requests
     baseURL: '/api/',
-    // check path prefix and replace prefix and baseURL
-    // for example:
-    // StrictFetch.prepare({ url: 'external' })
-    // will be converted to:
-    // StrictFetch.prepare({ url: 'https://external.com/api' })
-    baseURLMapper: [
-      {
-        prefix: /^external/,
-        value: 'https://external.com/api'
-      }
-    ],
   },
 })
 ```
@@ -184,6 +173,65 @@ const {
 const onSubmit = () => {
   execute()?.then( /* ... */ ).catch( /* ... */ );
 };
+```
+
+## Subscriptions
+
+Nuxt Strict Fetch module provides the opportunity to subscribe to API events:
+
+```ts
+StrictFetch.hooks.subscribe('method:create:start', () => { /* ... */ });
+
+StrictFetch.hooks.subscribe('method:create:finish', () => { /* ... */ });
+
+StrictFetch.hooks.unsubscribe('method:create:start', () => { /* ... */ });
+
+StrictFetch.hooks.unsubscribe('method:create:finish', () => { /* ... */ });
+```
+
+## Order Requests
+
+You cat to create order of requests. When `orderKey: 'my-order'` key is added to methods, its will be executed only one by one.
+In other words, when second request with `orderKey: 'my-order'` will be executed, request will be sent only after first finish.
+
+```ts
+const OrderAPI = {
+  first: StrictFetch.prepare({
+    url: 'first',
+    orderKey: 'my-order',
+  }),
+  second: StrictFetch.prepare({
+    url: 'second',
+    orderKey: 'my-order',
+  }),
+};
+
+OrderAPI.first();
+OrderAPI.second(); // will wait for first request finish
+```
+
+## Other helpful options
+
+```ts
+const options = {
+  selfInterrupted: true, // will interrupt previous requests when new request will be executed
+  onError: () => { /* ... */ }, // will be called on error but ignored 'AbortError' error
+  methodKey: 'my-method', // key of method for subscribing
+  orderKey: 'my-order', // key of order for subscribing or ordering requests
+  groupKey: 'my-group', // key of group for subscribing
+  proxyServerCookies: true, // will send cookies from browser for request on server side
+};
+
+/** global options injected in StrictFetch */
+StrictFetch.init(options);
+
+// or
+
+/** options for current request */
+StrictFetch.prepare({
+  url: 'url',
+  ...options,
+})
 ```
 
 ## Development

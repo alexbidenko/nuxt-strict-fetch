@@ -25,7 +25,6 @@ export type Options = InitialFetchOptions & {
   groupKey?: string;
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
-  baseURLMapper?: URLMapItemType[];
   onError?: (error: RequestError | ResponseError) => void;
 };
 
@@ -45,11 +44,6 @@ type ErrorBodyType = {
     message?: string;
   };
   message?: string;
-};
-
-export type URLMapItemType = {
-  prefix: RegExp;
-  value: string;
 };
 
 export type SchemasType<R, B = undefined, P = undefined, Q = undefined> = {

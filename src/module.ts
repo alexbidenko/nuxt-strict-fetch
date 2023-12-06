@@ -1,7 +1,7 @@
 import {defineNuxtModule, addPlugin, createResolver, addImportsDir} from '@nuxt/kit';
 import type {Options} from "./runtime/utils/request/types";
 
-export interface ModuleOptions extends Pick<Options, 'baseURL' | 'baseURLMapper'> {}
+export interface ModuleOptions extends Pick<Options, 'baseURL'> {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

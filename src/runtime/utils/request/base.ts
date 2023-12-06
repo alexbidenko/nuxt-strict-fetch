@@ -53,15 +53,13 @@ export const StrictFetch = {
     {
       orderKey,
       methodKey,
+      // TODO: need apply groupKey for subscription
       groupKey: _,
       selfInterrupted,
-      baseURLMapper,
       ...options
     }: Options,
     pluginOptions?: PluginOptionsType,
   ) => {
-    const mapper = baseURLMapper?.find((item) => item.prefix.test(url));
-
     if (methodKey && pluginOptions) {
       pluginOptions.orderHooks[`method:${methodKey}:start`]?.forEach((el) =>
         el(),
@@ -87,11 +85,10 @@ export const StrictFetch = {
       });
     }
 
-    return $fetch<T>(mapper ? url.replace(mapper.prefix, '') : url, {
+    return $fetch<T>(url, {
       signal: methodKey
         ? pluginOptions?.methodSignals[methodKey]?.signal
         : null,
-      baseURL: mapper?.value || options.baseURL,
       ...options,
     }).finally(() => {
       if (!pluginOptions) return;
