@@ -114,9 +114,9 @@ export const StrictFetch = {
 
   prepare: <
     R,
-    B extends object | undefined = undefined,
-    P extends object | undefined = undefined,
-    Q extends Record<string, string> | undefined = undefined,
+    B extends object | undefined | null = undefined,
+    P extends object | undefined | null = undefined,
+    Q extends Record<string, string | number> | undefined | null = undefined,
   >({
     url,
     method = HTTPMethod.get,

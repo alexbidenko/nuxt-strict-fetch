@@ -7,9 +7,9 @@ import type {
 
 type UseRequestReturnType<
   R,
-  B = undefined,
-  P = undefined,
-  Q extends undefined | Record<string, string> = undefined,
+  B extends object | undefined | null = undefined,
+  P extends object | undefined | null = undefined,
+  Q extends undefined | null | Record<string, string | number> = undefined,
 > = {
   execute: () => undefined | Promise<R>;
   isValid: Ref<boolean>;
@@ -23,9 +23,9 @@ function useRequest<R>(
 
 function useRequest<
   R,
-  B,
-  P extends object | undefined,
-  Q extends undefined | Record<string, string>,
+  B extends object | undefined | null,
+  P extends object | undefined | null,
+  Q extends undefined | null | Record<string, string | number>,
 >(
   request: PreparedRequestType<R, B, P, Q>,
   parametersGetter: () => RequestParametersType<B, P, Q>,
@@ -36,9 +36,9 @@ function useRequest<
 
 function useRequest<
   R,
-  B,
-  P extends object | undefined,
-  Q extends undefined | Record<string, string>,
+  B extends object | undefined | null,
+  P extends object | undefined | null,
+  Q extends undefined | null | Record<string, string | number>,
 >(
   request: PreparedRequestType<R, B, P, Q>,
   parametersGetter?: () => RequestParametersType<B, P, Q>,
