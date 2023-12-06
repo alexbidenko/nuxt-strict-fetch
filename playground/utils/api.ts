@@ -1,4 +1,3 @@
-import {HTTPMethod} from "../../src/runtime/utils/request/types";
 import {array, object, string} from "yup";
 
 const createItemBodySchema = object().required().shape({

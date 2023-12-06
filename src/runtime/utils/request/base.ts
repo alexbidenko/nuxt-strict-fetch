@@ -1,11 +1,11 @@
 import { caseTransfer } from './cases';
-import {mergeOptions} from "./utils";
+import { mergeOptions } from "./utils";
 import type {
   HookKey,
-  Options,
   PluginOptionsType,
   PreparedRequestType,
   SchemasType,
+  StrictFetchOptions,
 } from './types';
 import {
   Case,
@@ -29,7 +29,7 @@ export const StrictFetch = {
   },
 
   // TODO: need opportunity to replace default $fetch method for custom ($csrfFetch from nuxt-security for example)
-  init: (options: Options) => {
+  init: (options: StrictFetchOptions) => {
     const nuxtApp = useNuxtApp();
 
     Object.assign(nuxtApp.$strictFetch.options, options);
@@ -57,7 +57,7 @@ export const StrictFetch = {
       groupKey: _,
       selfInterrupted,
       ...options
-    }: Options,
+    }: StrictFetchOptions,
     pluginOptions?: PluginOptionsType,
   ) => {
     if (methodKey && pluginOptions) {
@@ -126,7 +126,7 @@ export const StrictFetch = {
     url: string | ((params: P) => string);
     method?: HTTPMethod;
     schemas?: SchemasType<R, B, P, Q>;
-    options?: Options | Options[];
+    options?: StrictFetchOptions | StrictFetchOptions[];
   }) => {
     const executor: PreparedRequestType<R, B, P, Q> = async (
       parameters,

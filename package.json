@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",
@@ -20,7 +20,6 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
-    "prepare": "nuxi prepare",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
@@ -28,7 +27,8 @@
     "lint": "eslint .",
     "typecheck": "nuxi typecheck",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "postinstall": "nuxi prepare"
   },
   "dependencies": {
     "@nuxt/kit": "^3.8.2",
@@ -44,6 +44,7 @@
     "changelogen": "^0.5.5",
     "eslint": "^8.55.0",
     "nuxt": "^3.8.2",
+    "ofetch": "^1.3.3",
     "vitest": "^0.33.0"
   }
 }

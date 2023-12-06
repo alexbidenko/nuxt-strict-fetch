@@ -1,7 +1,7 @@
 import {defineNuxtModule, addPlugin, createResolver, addImportsDir} from '@nuxt/kit';
-import type {Options} from "./runtime/utils/request/types";
+import type { StrictFetchOptions } from './runtime/utils/request/types';
 
-export interface ModuleOptions extends Pick<Options, 'baseURL'> {}
+export interface ModuleOptions extends Pick<StrictFetchOptions, 'baseURL'> {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -13,7 +13,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.strictFetchOptions = options;
 
     addPlugin(resolver.resolve('./runtime/plugin'));
-    addImportsDir(resolver.resolve('./runtime/utils/request'));
+    addImportsDir(resolver.resolve('./runtime/utils'));
     addImportsDir(resolver.resolve('./runtime/composables'));
   }
 })

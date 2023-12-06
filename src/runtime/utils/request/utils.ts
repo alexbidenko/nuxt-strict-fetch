@@ -1,7 +1,7 @@
-import type {Options} from "./types";
+import type {StrictFetchOptions} from './types';
 
-export const mergeOptions = (...list: (Options | Options[] | undefined)[]): Options =>
-  list.reduce<Options>((acc, options) => {
+export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[] | undefined)[]): StrictFetchOptions =>
+  list.reduce<StrictFetchOptions>((acc, options) => {
     const mergedOptions = Array.isArray(options)
       ? mergeOptions(...options)
       : options;

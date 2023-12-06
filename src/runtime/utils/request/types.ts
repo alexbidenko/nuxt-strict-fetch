@@ -1,9 +1,8 @@
-import type { Schema } from 'yup';
+import type {Schema} from 'yup';
 
-// TODO: import types from ofetch not working correctly
-type InitialFetchOptions = Parameters<typeof $fetch.create>[0];
+type InitialFetchOptions = any;
 
-type InitialFetchContext = Parameters<NonNullable<InitialFetchOptions['onRequest']>>[0]
+type InitialFetchContext = any;
 
 export enum Case {
   camel,
@@ -18,7 +17,9 @@ export enum HTTPMethod {
   delete = 'delete',
 }
 
-export type Options = InitialFetchOptions & {
+export type StrictFetchContext = InitialFetchContext;
+
+export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
   method?: HTTPMethod;
   orderKey?: string;
   methodKey?: string;
@@ -29,7 +30,7 @@ export type Options = InitialFetchOptions & {
 };
 
 export type PluginOptionsType = {
-  options: Options;
+  options: StrictFetchOptions;
   orderRequests: Record<string, ((v: unknown) => void)[]>;
   orderHooks: Record<string, (() => void)[]>;
   methodSignals: Record<string, AbortController>;
@@ -66,7 +67,7 @@ export type PreparedRequestType<
 > = {
   (
     parameters?: RequestParametersType<B, P, Q> | null,
-    additionalOptions?: Options,
+    additionalOptions?: StrictFetchOptions,
   ): Promise<R>;
   schemas?: SchemasType<R, B, P, Q>;
 };
@@ -79,14 +80,14 @@ export enum HTTPError {
 
 export class FetchError extends Error {
   name = 'FetchError';
-  context?: InitialFetchContext;
+  context?: StrictFetchContext;
   body?: ErrorBodyType;
 
   constructor(message: string) {
     super(message);
   }
 
-  from(context: InitialFetchContext, body?: ErrorBodyType) {
+  from(context: StrictFetchContext, body?: ErrorBodyType) {
     this.context = context;
     this.body = body;
     return this;

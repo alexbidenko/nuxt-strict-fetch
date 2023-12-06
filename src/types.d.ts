@@ -1,4 +1,4 @@
-import type {NuxtPluginType, Options} from "./runtime/utils/request/types";
+import type { NuxtPluginType, StrictFetchOptions } from './runtime/utils/request/types';
 
 declare module '#app' {
   interface NuxtApp extends NuxtPluginType {}
@@ -12,7 +12,7 @@ declare module 'nuxt/schema' {
   interface RuntimeConfig {}
 
   interface PublicRuntimeConfig {
-    strictFetchOptions?: Options
+    strictFetchOptions: StrictFetchOptions;
   }
 }
 
