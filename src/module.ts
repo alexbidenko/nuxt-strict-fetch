@@ -1,7 +1,8 @@
 import {defineNuxtModule, addPlugin, createResolver, addImportsDir} from '@nuxt/kit';
-import type { StrictFetchOptions } from './runtime/utils/request/types';
 
-export interface ModuleOptions extends Pick<StrictFetchOptions, 'baseURL'> {}
+export interface ModuleOptions {
+  baseURL?: string;
+}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {

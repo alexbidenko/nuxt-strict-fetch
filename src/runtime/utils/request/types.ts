@@ -1,8 +1,9 @@
 import type {Schema} from 'yup';
+import type { FetchContext, FetchOptions } from 'ofetch';
 
-type InitialFetchOptions = any;
+type InitialFetchOptions = FetchOptions;
 
-type InitialFetchContext = any;
+type InitialFetchContext = FetchContext;
 
 export enum Case {
   camel,
