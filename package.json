@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",

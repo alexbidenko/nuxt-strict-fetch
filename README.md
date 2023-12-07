@@ -8,7 +8,7 @@
 My new Nuxt module for doing amazing things.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/nuxt-strict-fetch?file=playground%2Fapp.vue) -->
+<!-- - [🏀 Online playground](https://stackblitz.com/github/alexbidenko/nuxt-strict-fetch?file=playground%2Fapp.vue) -->
 <!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
@@ -238,6 +238,18 @@ StrictFetch.prepare({
   url: 'url',
   ...options,
 })
+```
+
+## Import types and structures
+
+You can import types and structures from `nuxt-strict-fetch/dist/types` path.
+
+```ts
+import { ResponseError } from 'nuxt-strict-fetch/dist/types';
+
+// or
+
+import type { StrictFetchOptions } from 'nuxt-strict-fetch/dist/types';
 ```
 
 ## Development
