@@ -1,10 +1,12 @@
-import type { $Fetch } from "nitropack";
 import { caseTransfer } from './cases';
-import { mergeOptions } from "./utils";
+import { mergeOptions, validateParameters } from "./utils";
 import type {
   HookKey,
   PluginOptionsType,
   PreparedRequestType,
+  RequestBodyInitialType,
+  RequestParamsInitialType,
+  RequestQueryInitialType,
   SchemasType,
   StrictFetchOptions,
 } from './types';
@@ -30,7 +32,7 @@ export const StrictFetch = {
     } as PluginOptionsType)
   },
 
-  init: (options: StrictFetchOptions & { $fetch: $Fetch }) => {
+  init: (options: StrictFetchOptions) => {
     const nuxtApp = useNuxtApp();
 
     Object.assign(nuxtApp.$strictFetch.options, options);
@@ -114,9 +116,9 @@ export const StrictFetch = {
 
   prepare: <
     R,
-    B extends object | undefined | null = undefined,
-    P extends object | undefined | null = undefined,
-    Q extends Record<string, string | number> | undefined | null = undefined,
+    B extends RequestBodyInitialType = undefined,
+    P extends RequestParamsInitialType = undefined,
+    Q extends RequestQueryInitialType = undefined,
   >({
     url,
     method = HTTPMethod.get,
@@ -144,15 +146,10 @@ export const StrictFetch = {
       );
 
       try {
-        const [body, params] = await Promise.all([
-          (parameters &&
-            'body' in parameters &&
-            schemas?.body?.validate(parameters.body)) ||
-            undefined,
-          (parameters &&
-            'params' in parameters &&
-            schemas?.params?.validate(parameters.params)) ||
-            undefined,
+        const [body, params, query] = await Promise.all([
+          validateParameters(schemas, parameters, 'body' as const),
+          validateParameters(schemas, parameters, 'params'),
+          validateParameters(schemas, parameters, 'query'),
         ]);
 
         const data = await StrictFetch.execute<R>(
@@ -160,6 +157,7 @@ export const StrictFetch = {
           mergeOptions(baseOptions, {
             headers: baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {},
             method,
+            params: query,
             body: body && caseTransfer(body, Case.snake),
             onRequestError(context) {
               throw new RequestError(

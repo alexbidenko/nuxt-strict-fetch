@@ -1,4 +1,10 @@
-import type {StrictFetchOptions} from './types';
+import type {
+  RequestBodyInitialType,
+  RequestParametersType,
+  RequestParamsInitialType, RequestQueryInitialType,
+  SchemasType,
+  StrictFetchOptions
+} from './types';
 
 export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[] | undefined)[]): StrictFetchOptions =>
   list.reduce<StrictFetchOptions>((acc, options) => {
@@ -39,3 +45,19 @@ export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[]
       headers: { ...(acc.headers || {}), ...(mergedOptions.headers || {}) },
     };
   }, {});
+
+export const validateParameters = async <
+  R,
+  B extends RequestBodyInitialType = undefined,
+  P extends RequestParamsInitialType = undefined,
+  Q extends RequestQueryInitialType = undefined,
+>(
+  schemas: SchemasType<R, B, P, Q> | undefined,
+  parameters: RequestParametersType<B, P, Q> | undefined | null,
+  field: 'body' | 'params' | 'query',
+) => {
+  const _parameters = parameters as any;
+  const _schemas = schemas as any;
+
+  return _parameters?.[field] && (_schemas?.[field]?.validate(_parameters[field]) || _parameters[field] || undefined);
+};

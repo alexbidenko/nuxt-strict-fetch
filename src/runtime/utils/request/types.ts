@@ -56,6 +56,10 @@ export type SchemasType<R, B = undefined, P = undefined, Q = undefined> = {
   query?: Schema<Q>;
 };
 
+export type RequestBodyInitialType = object | undefined | null;
+export type RequestParamsInitialType = object | undefined | null;
+export type RequestQueryInitialType = Record<string, string | number> | undefined | null;
+
 export type RequestParametersType<B, P, Q> = object &
   (B extends undefined | null ? object : { body: B }) &
   (P extends undefined | null ? object : { params: P }) &
@@ -63,9 +67,9 @@ export type RequestParametersType<B, P, Q> = object &
 
 export type PreparedRequestType<
   R,
-  B extends object | undefined | null = undefined,
-  P extends object | undefined | null = undefined,
-  Q extends Record<string, string | number> | undefined | null = undefined,
+  B extends RequestBodyInitialType = undefined,
+  P extends RequestParamsInitialType = undefined,
+  Q extends RequestQueryInitialType = undefined,
 > = {
   (
     parameters?: RequestParametersType<B, P, Q> | null,

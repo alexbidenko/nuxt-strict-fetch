@@ -4,6 +4,7 @@ import { computed, ref } from '#imports';
 import type {
   PreparedRequestType,
   RequestParametersType,
+  RequestBodyInitialType, RequestParamsInitialType, RequestQueryInitialType,
 } from '../utils/request/types';
 
 type UseRequestReturnType<
@@ -24,9 +25,9 @@ function useRequest<R>(
 
 function useRequest<
   R,
-  B extends object | undefined | null,
-  P extends object | undefined | null,
-  Q extends undefined | null | Record<string, string | number>,
+  B extends RequestBodyInitialType,
+  P extends RequestParamsInitialType,
+  Q extends RequestQueryInitialType,
 >(
   request: PreparedRequestType<R, B, P, Q>,
   parametersGetter: () => RequestParametersType<B, P, Q>,
