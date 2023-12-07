@@ -65,13 +65,16 @@ If you wish to define some global options for all requests in plugin, you can us
 
 ```ts
 export default defineNuxtPlugin(() => {
+  const { $csrfFetch } = useNuxtApp(); // nuxt-csurf module $csrfFetch for example
+
   StrictFetch.init({
     onRequest(context) {
       context.options.headers = {
         ...context.options.headers,
         Custom: 'Value',
       };
-    }
+    },
+    fetch: $csrfFetch, // option for default Nuxt $fetch reassignment
   });
 });
 ```
@@ -224,7 +227,6 @@ const options = {
   onError: () => { /* ... */ }, // will be called on error but ignored 'AbortError' error
   methodKey: 'my-method', // key of method for subscribing
   orderKey: 'my-order', // key of order for subscribing or ordering requests
-  groupKey: 'my-group', // key of group for subscribing
   proxyServerCookies: true, // will send cookies from browser for request on server side
 };
 

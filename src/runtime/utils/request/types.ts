@@ -1,5 +1,6 @@
 import type { Schema } from 'yup';
 import type { FetchContext, FetchOptions } from 'ofetch';
+import type { $Fetch } from "nitropack";
 
 type InitialFetchOptions = FetchOptions;
 
@@ -24,10 +25,10 @@ export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
   method?: HTTPMethod;
   orderKey?: string;
   methodKey?: string;
-  groupKey?: string;
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
   onError?: (error: RequestError | ResponseError) => void;
+  fetch?: $Fetch;
 };
 
 export type PluginOptionsType = {

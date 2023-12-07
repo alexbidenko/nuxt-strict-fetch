@@ -1,3 +1,4 @@
+import type { $Fetch } from "nitropack";
 import { caseTransfer } from './cases';
 import { mergeOptions } from "./utils";
 import type {
@@ -29,8 +30,7 @@ export const StrictFetch = {
     } as PluginOptionsType)
   },
 
-  // TODO: need opportunity to replace default $fetch method for custom ($csrfFetch from nuxt-security for example)
-  init: (options: StrictFetchOptions) => {
+  init: (options: StrictFetchOptions & { $fetch: $Fetch }) => {
     const nuxtApp = useNuxtApp();
 
     Object.assign(nuxtApp.$strictFetch.options, options);
@@ -52,10 +52,9 @@ export const StrictFetch = {
   execute: async <T>(
     url: string,
     {
+      fetch = $fetch,
       orderKey,
       methodKey,
-      // TODO: need apply groupKey for subscription
-      groupKey: _,
       selfInterrupted,
       ...options
     }: StrictFetchOptions,
@@ -86,7 +85,7 @@ export const StrictFetch = {
       });
     }
 
-    return $fetch<T>(url, {
+    return fetch<T>(url, {
       signal: methodKey
         ? pluginOptions?.methodSignals[methodKey]?.signal
         : null,
