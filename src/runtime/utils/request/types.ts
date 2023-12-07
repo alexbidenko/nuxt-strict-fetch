@@ -1,4 +1,4 @@
-import type {Schema} from 'yup';
+import type { Schema } from 'yup';
 import type { FetchContext, FetchOptions } from 'ofetch';
 
 type InitialFetchOptions = FetchOptions;

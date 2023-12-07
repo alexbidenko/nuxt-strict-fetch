@@ -240,15 +240,11 @@ StrictFetch.prepare({
 })
 ```
 
-## Import types and structures
+## Import types
 
-You can import types and structures from `nuxt-strict-fetch/dist/types` path.
+You can import types from `nuxt-strict-fetch/dist/types` path.
 
 ```ts
-import { ResponseError } from 'nuxt-strict-fetch/dist/types';
-
-// or
-
 import type { StrictFetchOptions } from 'nuxt-strict-fetch/dist/types';
 ```
 
