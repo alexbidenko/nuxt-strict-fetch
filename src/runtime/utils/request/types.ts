@@ -59,7 +59,7 @@ export type SchemasType<R, B = undefined, P = undefined, Q = undefined> = {
 
 export type RequestBodyInitialType = FormData | object | undefined | null;
 export type RequestParamsInitialType = object | undefined | null;
-export type RequestQueryInitialType = Record<string, string | number> | undefined | null;
+export type RequestQueryInitialType = Record<string, unknown> | undefined | null;
 
 export type RequestParametersType<B, P, Q> = object &
   (B extends undefined | null ? object : { body: B }) &

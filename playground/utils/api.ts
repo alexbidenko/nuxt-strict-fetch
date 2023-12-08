@@ -21,4 +21,7 @@ export const CommonAPI = {
     method: HTTPMethod.post,
     schemas: { response: itemSchema, body: createItemBodySchema },
   }),
+  details: StrictFetch.prepare<number[], null, {id: number}, {filter?: boolean}>({
+    url: ({ id }) => `list/${id}`,
+  })
 };
