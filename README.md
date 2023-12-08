@@ -196,11 +196,13 @@ StrictFetch.hooks.subscribe('method:create:finish', () => { /* ... */ });
 StrictFetch.hooks.unsubscribe('method:create:start', () => { /* ... */ });
 
 StrictFetch.hooks.unsubscribe('method:create:finish', () => { /* ... */ });
+
+// where `create` is methodKey field of the method
 ```
 
 ## Order Requests
 
-You cat to create order of requests. When `orderKey: 'my-order'` key is added to methods, its will be executed only one by one.
+You can to create order of requests. When `orderKey: 'my-order'` key is added to methods, its will be executed only one by one.
 In other words, when second request with `orderKey: 'my-order'` will be executed, request will be sent only after first finish.
 
 ```ts
@@ -255,8 +257,8 @@ const FormDataAPI = {
   second: StrictFetch.prepare<null, { name: string; file: File; tags: string[] }>({
     url: 'form-data-url',
     method: HTTPMethod.post,
-    // `will` be converted to FormData automatically
-    // `name` and file as is
+    // will be converted to FormData automatically
+    // `name` and `file` as is
     // `tags` as array of FormData fields with the same key
     formData: true,
   })
@@ -282,10 +284,10 @@ const CommonAPI = {
 
 ## Import types
 
-You can import types from `nuxt-strict-fetch/dist/types` path.
+You can import types from `nuxt-strict-fetch/dist/runtime/types` path.
 
 ```ts
-import type { StrictFetchOptions } from 'nuxt-strict-fetch/dist/types';
+import type { StrictFetchOptions } from 'nuxt-strict-fetch/dist/runtime/types';
 ```
 
 ## Development
