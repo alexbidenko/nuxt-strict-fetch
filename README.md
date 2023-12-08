@@ -242,6 +242,44 @@ StrictFetch.prepare({
 })
 ```
 
+## Work with FormData
+
+Nuxt Strict Fetch have three ways to work with FormData:
+
+```ts
+const FormDataAPI = {
+  first: StrictFetch.prepare<null, FormData>({
+    url: 'form-data-url',
+    method: HTTPMethod.post,
+  }),
+  second: StrictFetch.prepare<null, { name: string; file: File; tags: string[] }>({
+    url: 'form-data-url',
+    method: HTTPMethod.post,
+    // `will` be converted to FormData automatically
+    // `name` and file as is
+    // `tags` as array of FormData fields with the same key
+    formData: true,
+  })
+};
+
+// in plugin
+// global declaration to use FormData request body
+StrictFetch.init({ formData: true });
+
+// in methods file
+const CommonAPI = {
+  formDataMethod: StrictFetch.prepare<null, { name: string; file: File; tags: string[] }>({
+    url: 'form-data-url',
+    method: HTTPMethod.post,
+  }),
+  jsonDataMethod: StrictFetch.prepare<null, { name: string; tags: string[] }>({
+    url: 'json-data-url',
+    method: HTTPMethod.post,
+    formData: false, // disabling for current method
+  }),
+};
+```
+
 ## Import types
 
 You can import types from `nuxt-strict-fetch/dist/types` path.

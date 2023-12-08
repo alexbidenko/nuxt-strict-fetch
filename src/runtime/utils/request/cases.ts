@@ -1,6 +1,6 @@
 import { Case } from './types';
 
-const isObject = (o: unknown) =>
+export const isObject = (o: unknown) =>
   o === Object(o) && !Array.isArray(o) && typeof o !== 'function';
 
 export const toCamelCase = (s: string) =>

@@ -1,5 +1,5 @@
 import { caseTransfer } from './cases';
-import { mergeOptions, validateParameters } from "./utils";
+import {mergeOptions, prepareRequestBody, validateParameters} from "./utils";
 import type {
   HookKey,
   PluginOptionsType,
@@ -158,7 +158,7 @@ export const StrictFetch = {
             headers: baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {},
             method,
             params: query,
-            body: body && caseTransfer(body, Case.snake),
+            body: prepareRequestBody(body, baseOptions),
             onRequestError(context) {
               throw new RequestError(
                 `Fetch request error: ${

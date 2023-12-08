@@ -27,6 +27,7 @@ export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
   methodKey?: string;
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
+  formData?: boolean;
   onError?: (error: RequestError | ResponseError) => void;
   fetch?: $Fetch;
 };
@@ -56,7 +57,7 @@ export type SchemasType<R, B = undefined, P = undefined, Q = undefined> = {
   query?: Schema<Q>;
 };
 
-export type RequestBodyInitialType = object | undefined | null;
+export type RequestBodyInitialType = FormData | object | undefined | null;
 export type RequestParamsInitialType = object | undefined | null;
 export type RequestQueryInitialType = Record<string, string | number> | undefined | null;
 

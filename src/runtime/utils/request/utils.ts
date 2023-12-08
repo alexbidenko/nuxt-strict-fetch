@@ -1,10 +1,13 @@
-import type {
-  RequestBodyInitialType,
-  RequestParametersType,
-  RequestParamsInitialType, RequestQueryInitialType,
-  SchemasType,
-  StrictFetchOptions
+import {
+  Case,
+  type RequestBodyInitialType,
+  type RequestParametersType,
+  type RequestParamsInitialType,
+  type RequestQueryInitialType,
+  type SchemasType,
+  type StrictFetchOptions
 } from './types';
+import {caseTransfer, isObject} from "~/src/runtime/utils/request/cases";
 
 export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[] | undefined)[]): StrictFetchOptions =>
   list.reduce<StrictFetchOptions>((acc, options) => {
@@ -60,4 +63,17 @@ export const validateParameters = async <
   const _schemas = schemas as any;
 
   return _parameters?.[field] && (_schemas?.[field]?.validate(_parameters[field]) || _parameters[field] || undefined);
+};
+
+export const prepareRequestBody = <T extends RequestBodyInitialType = undefined>(body: T, options: StrictFetchOptions) => {
+  if (!body || body instanceof FormData) return body;
+  if (options.formData && isObject(body)) {
+    const formData = new FormData();
+    Object.entries(body).forEach(([key, value]) => {
+      if (Array.isArray(value)) value.forEach((item) => formData.append(key, item));
+      else formData.append(key, value);
+    });
+    return formData;
+  }
+  return caseTransfer(body, Case.snake);
 };
