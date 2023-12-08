@@ -1,13 +1,13 @@
-import {
-  Case,
-  type RequestBodyInitialType,
-  type RequestParametersType,
-  type RequestParamsInitialType,
-  type RequestQueryInitialType,
-  type SchemasType,
-  type StrictFetchOptions
+import { Case } from './types';
+import type {
+  RequestBodyInitialType,
+  RequestParametersType,
+  RequestParamsInitialType,
+  RequestQueryInitialType,
+  SchemasType,
+  StrictFetchOptions
 } from './types';
-import {caseTransfer, isObject} from "~/src/runtime/utils/request/cases";
+import {caseTransfer, isObject} from "./cases";
 
 export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[] | undefined)[]): StrictFetchOptions =>
   list.reduce<StrictFetchOptions>((acc, options) => {
