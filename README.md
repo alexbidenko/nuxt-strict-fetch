@@ -284,10 +284,10 @@ const CommonAPI = {
 
 ## Import types
 
-You can import types from `nuxt-strict-fetch` path.
+You can import types from `nuxt-strict-fetch/types` path.
 
 ```ts
-import type { StrictFetchOptions } from 'nuxt-strict-fetch';
+import type { StrictFetchOptions } from 'nuxt-strict-fetch/types';
 ```
 
 ## Development

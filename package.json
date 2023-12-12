@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",
@@ -8,10 +8,11 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": ["./dist/types.d.ts", "./dist/runtime/types.d.ts"],
+      "types": "./dist/types.d.ts",
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
-    }
+    },
+    "./types": "./dist/runtime/types.d.ts"
   },
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
