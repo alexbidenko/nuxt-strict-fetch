@@ -56,6 +56,7 @@ export const StrictFetch = {
     {
       fetch = $fetch,
       orderKey,
+      groupKey: _,
       methodKey,
       selfInterrupted,
       ...options
@@ -77,9 +78,7 @@ export const StrictFetch = {
         if (pluginOptions.orderRequests[orderKey])
           pluginOptions.orderRequests[orderKey].push(r);
         else {
-          pluginOptions.orderHooks[`order:${orderKey}:start`]?.forEach((el) =>
-            el(),
-          );
+          pluginOptions.orderHooks[`order:${orderKey}:start`]?.forEach((el) => el());
           pluginOptions.orderRequests[orderKey] = [r];
         }
 

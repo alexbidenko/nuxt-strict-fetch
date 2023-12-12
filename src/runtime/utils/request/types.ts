@@ -24,6 +24,7 @@ export type StrictFetchContext = InitialFetchContext;
 export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
   method?: HTTPMethod;
   orderKey?: string;
+  groupKey?: string;
   methodKey?: string;
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
