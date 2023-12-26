@@ -14,8 +14,8 @@
     },
     "./types": "./dist/runtime/types.d.ts",
     "./common": {
-      "types":  "./dist/runtime/utils/request.d.ts",
-      "import": "./dist/runtime/utils/request.mjs"
+      "types":  "./dist/runtime/utils/common/base.d.ts",
+      "import": "./dist/runtime/utils/common/base.mjs"
     }
   },
   "main": "./dist/module.cjs",
