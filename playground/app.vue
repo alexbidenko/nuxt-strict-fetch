@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CommonAPI } from '~/utils/api'
+
 const { data } = useAsyncData(() => CommonAPI.list());
 
 const name = ref('');
@@ -16,6 +18,14 @@ const onSubmit = () => {
     alert(e.message);
   });
 };
+
+const randomJoke = () => {
+  CommonAPI.joke().then((joke) => {
+    alert(joke.setup + '\n\n' + joke.punchline);
+  })
+};
+
+const checkExpired = () => CommonAPI.checkExpired();
 </script>
 
 <template>
@@ -43,5 +53,15 @@ const onSubmit = () => {
         {{ isLoading ? 'Loading...' : 'Submit' }}
       </button>
     </form>
+
+    <hr>
+
+    <button @click="randomJoke">
+      Joke!
+    </button>
+
+    <button @click="checkExpired">
+      Check expired
+    </button>
   </div>
 </template>

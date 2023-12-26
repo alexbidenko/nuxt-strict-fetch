@@ -111,7 +111,7 @@ const CommonAPI = {
 `prepare` method has the following generic types:
 
 ```ts
-StrictFetch.prepare<R /* response body */, B /* request body */, P /* request params */, Q /* request query */>
+StrictFetch.prepare<R /* response body */, B /* common body */, P /* common params */, Q /* common query */>
 ```
 
 Also, you may define API with validation schemas:
@@ -165,7 +165,7 @@ Module provides the following composable methods:
 const name = ref('');
 
 const {
-  execute, // execute request after validation (execution will return undefined if validation failed or loading is processed)
+  execute, // execute common after validation (execution will return undefined if validation failed or loading is processed)
   parameters, // reactive data provided to second useRequest argument
   isValid, // reactive variable for validation result
   isLoading, // reactive variable for loading state
@@ -218,18 +218,18 @@ const OrderAPI = {
 };
 
 OrderAPI.first();
-OrderAPI.second(); // will wait for first request finish
+OrderAPI.second(); // will wait for first common finish
 ```
 
 ## Other helpful options
 
 ```ts
 const options = {
-  selfInterrupted: true, // will interrupt previous requests when new request will be executed
+  selfInterrupted: true, // will interrupt previous requests when new common will be executed
   onError: () => { /* ... */ }, // will be called on error but ignored 'AbortError' error
   methodKey: 'my-method', // key of method for subscribing
   orderKey: 'my-order', // key of order for subscribing or ordering requests
-  proxyServerCookies: true, // will send cookies from browser for request on server side
+  proxyServerCookies: true, // will send cookies from browser for common on server side
 };
 
 /** global options injected in StrictFetch */
@@ -237,7 +237,7 @@ StrictFetch.init(options);
 
 // or
 
-/** options for current request */
+/** options for current common */
 StrictFetch.prepare({
   url: 'url',
   ...options,
@@ -265,7 +265,7 @@ const FormDataAPI = {
 };
 
 // in plugin
-// global declaration to use FormData request body
+// global declaration to use FormData common body
 StrictFetch.init({ formData: true });
 
 // in methods file
@@ -280,6 +280,31 @@ const CommonAPI = {
     formData: false, // disabling for current method
   }),
 };
+```
+
+## Global catching
+
+If you with to define some logic for request catching, you might do it in options:
+
+```ts
+StrictFetch.init({
+  onRequest(context) {
+    const expiredAt = localStorage.getItem('token')
+    if (expiredAt) context.options.headers = { 'x-token': expiredAt }
+  },
+  catch(error) {
+    if (error.context.response.status === 401) {
+      const expiredAt = new Date()
+      expiredAt.setSeconds(expiredAt.getSeconds() + 5)
+      localStorage.setItem('token', expiredAt.toISOString())
+
+      // Request repeating for example
+      return $fetch(error.context.request, error.context.options);
+    }
+
+    throw error
+  },
+})
 ```
 
 ## Import types

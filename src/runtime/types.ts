@@ -1,1 +1,1 @@
-export * from './utils/request/types';
+export * from './utils/common/types';

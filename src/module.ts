@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, createResolver, addImportsDir } from '@nuxt/kit';
+import {defineNuxtModule, addPlugin, createResolver, addImportsDir, addServerImportsDir} from '@nuxt/kit';
 
 export interface ModuleOptions {
   baseURL?: string;
@@ -14,8 +14,13 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.strictFetchOptions = options;
 
     addPlugin(resolver.resolve('./runtime/plugin'));
-    addImportsDir(resolver.resolve('./runtime/utils'));
+
+    addImportsDir(resolver.resolve('./runtime/utils/common'));
+    addImportsDir(resolver.resolve('./runtime/utils/client'));
     addImportsDir(resolver.resolve('./runtime/composables'));
+
+    addServerImportsDir(resolver.resolve('./runtime/utils/common'));
+    addServerImportsDir(resolver.resolve('./runtime/utils/server'))
 
     // addTypeTemplate({
     //   filename: 'types/nuxt-strict-fetch.d.ts',

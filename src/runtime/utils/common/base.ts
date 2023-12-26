@@ -1,14 +1,16 @@
 import { caseTransfer } from './cases';
 import {mergeOptions, prepareRequestBody, validateParameters} from "./utils";
 import type {
+  IStrictFetch,
   HookKey,
   PluginOptionsType,
   PreparedRequestType,
   RequestBodyInitialType,
   RequestParamsInitialType,
   RequestQueryInitialType,
-  SchemasType,
+  SimpleNuxtApp,
   StrictFetchOptions,
+  PrepareRequestSettings,
 } from './types';
 import {
   Case,
@@ -18,40 +20,55 @@ import {
   RequestError,
   ResponseError,
 } from './types';
-import { useNuxtApp } from '#imports';
 
-export const StrictFetch = {
-  autoInit: () => {
-    const nuxtApp = useNuxtApp();
+export class StrictFetchConstructor implements IStrictFetch {
+  private readonly _useApp?: () => SimpleNuxtApp;
 
-    nuxtApp.provide('strictFetch', {
+  constructor(useApp?: () => SimpleNuxtApp) {
+    this._useApp = useApp;
+  }
+
+  get app() {
+    return this._useApp?.();
+  }
+
+  autoInit = () => {
+    this.app?.provide('strictFetch', {
       options: {},
       orderRequests: {},
       orderHooks: {},
       methodSignals: {},
     } as PluginOptionsType)
-  },
+  };
 
-  init: (options: StrictFetchOptions) => {
-    const nuxtApp = useNuxtApp();
+  init = (options: StrictFetchOptions) => {
+    const nuxtApp = this.app;
 
-    Object.assign(nuxtApp.$strictFetch.options, options);
-  },
+    if (nuxtApp) Object.assign(nuxtApp.$strictFetch.options, options);
+  };
 
-  hooks: {
+  hooks = {
     subscribe: (key: HookKey, handler: () => void) => {
-      const { $strictFetch } = useNuxtApp();
-      $strictFetch.orderHooks[key] = [...($strictFetch.orderHooks[key] || []), handler];
+      const options = this.app?.$strictFetch;
+      if (options) options.orderHooks[key] = [...(options.orderHooks[key] || []), handler];
     },
     unsubscribe: (key: HookKey, handler: () => void) => {
-      const { $strictFetch } = useNuxtApp();
-      $strictFetch.orderHooks[key] = $strictFetch.orderHooks[key]?.filter(
+      const options = this.app?.$strictFetch;
+      if (options) options.orderHooks[key] = options.orderHooks[key]?.filter(
         (el) => el !== handler,
       );
     },
-  },
+  };
 
-  execute: async <T>(
+  private setupDefaultOptions = (options: StrictFetchOptions | StrictFetchOptions[]) => {
+    const mergedOptions = mergeOptions(options);
+
+    if (!mergedOptions.method) mergedOptions.methodKey = crypto.randomUUID();
+
+    return mergedOptions;
+  };
+
+  private execute = async <R>(
     url: string,
     {
       fetch = $fetch,
@@ -62,7 +79,7 @@ export const StrictFetch = {
       ...options
     }: StrictFetchOptions,
     pluginOptions?: PluginOptionsType,
-  ) => {
+  ): Promise<R> => {
     if (methodKey && pluginOptions) {
       pluginOptions.orderHooks[`method:${methodKey}:start`]?.forEach((el) =>
         el(),
@@ -86,11 +103,14 @@ export const StrictFetch = {
       });
     }
 
-    return fetch<T>(url, {
+    return fetch<R>(url, {
       signal: methodKey
         ? pluginOptions?.methodSignals[methodKey]?.signal
         : null,
       ...options,
+    }).catch((error) => {
+      if (options.catch) return options.catch<R>(error);
+      throw error;
     }).finally(() => {
       if (!pluginOptions) return;
 
@@ -111,9 +131,9 @@ export const StrictFetch = {
         } else pluginOptions.orderRequests[orderKey][0](true);
       }
     });
-  },
+  };
 
-  prepare: <
+  prepare = <
     R,
     B extends RequestBodyInitialType = undefined,
     P extends RequestParamsInitialType = undefined,
@@ -123,18 +143,14 @@ export const StrictFetch = {
     method = HTTPMethod.get,
     schemas,
     options = {},
-  }: {
-    url: string | ((params: P) => string);
-    method?: HTTPMethod;
-    schemas?: SchemasType<R, B, P, Q>;
-    options?: StrictFetchOptions | StrictFetchOptions[];
-  }) => {
+  }: PrepareRequestSettings<R, B, P, Q>) => {
+    options = this.setupDefaultOptions(options);
+
     const executor: PreparedRequestType<R, B, P, Q> = async (
       parameters,
       additionalOptions = {},
     ) => {
-      const nuxtApp =
-        typeof useNuxtApp !== 'undefined' ? useNuxtApp() : undefined;
+      const nuxtApp = this.app;
       const cookies = nuxtApp?.ssrContext?.event.headers?.get('cookie');
 
       const baseOptions = mergeOptions(
@@ -151,7 +167,7 @@ export const StrictFetch = {
           validateParameters(schemas, parameters, 'query'),
         ]);
 
-        const data = await StrictFetch.execute<R>(
+        const data = await this.execute<R>(
           typeof url === 'function' ? url(params as P) : url,
           mergeOptions(baseOptions, {
             headers: baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {},
@@ -161,7 +177,7 @@ export const StrictFetch = {
             onRequestError(context) {
               throw new RequestError(
                 `Fetch request error: ${
-                  context.error.message || 'Empty request "message" parameter'
+                  context.error.message || 'Empty common "message" parameter'
                 }`,
               )
                 .from(context)
@@ -201,5 +217,5 @@ export const StrictFetch = {
     executor.schemas = schemas;
 
     return executor;
-  },
-};
+  };
+}

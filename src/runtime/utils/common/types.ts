@@ -1,10 +1,13 @@
 import type { Schema } from 'yup';
 import type { FetchContext, FetchOptions } from 'ofetch';
 import type { $Fetch } from "nitropack";
+import type { NuxtApp } from "#app";
 
 type InitialFetchOptions = FetchOptions;
 
 type InitialFetchContext = FetchContext;
+
+export type SimpleNuxtApp = Pick<NuxtApp, 'provide' | 'ssrContext' | '$config' | '$strictFetch'>;
 
 export enum Case {
   camel,
@@ -31,6 +34,7 @@ export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
   formData?: boolean;
   onError?: (error: RequestError | ResponseError) => void;
   fetch?: $Fetch;
+  catch?: <R>(error: RequestError | ResponseError) => Promise<R>;
 };
 
 export type PluginOptionsType = {
@@ -84,6 +88,31 @@ export type HookKey = `${'order' | 'method'}:${string}:${'finish' | 'start'}`;
 
 export enum HTTPError {
   AbortError = 'AbortError',
+}
+
+export type PrepareRequestSettings<R, B, P, Q> = {
+  url: string | ((params: P) => string);
+  method?: HTTPMethod;
+  schemas?: SchemasType<R, B, P, Q>;
+  options?: StrictFetchOptions | StrictFetchOptions[];
+};
+
+export interface IStrictFetch {
+  autoInit: () => void;
+
+  init: (options: StrictFetchOptions) => void;
+
+  hooks: {
+    subscribe: (key: HookKey, handler: () => void) => void;
+    unsubscribe: (key: HookKey, handler: () => void) => void;
+  }
+
+  prepare: <
+    R,
+    B extends RequestBodyInitialType = undefined,
+    P extends RequestParamsInitialType = undefined,
+    Q extends RequestQueryInitialType = undefined,
+  >(settings: PrepareRequestSettings<R, B, P, Q>) => PreparedRequestType<R, B, P, Q>;
 }
 
 export class FetchError extends Error {

@@ -4,14 +4,16 @@ import { computed, ref } from '#imports';
 import type {
   PreparedRequestType,
   RequestParametersType,
-  RequestBodyInitialType, RequestParamsInitialType, RequestQueryInitialType,
-} from '../utils/request/types';
+  RequestBodyInitialType,
+  RequestParamsInitialType,
+  RequestQueryInitialType,
+} from '../utils/common/types';
 
 type UseRequestReturnType<
   R,
-  B extends object | undefined | null = undefined,
-  P extends object | undefined | null = undefined,
-  Q extends undefined | null | Record<string, string | number> = undefined,
+  B extends RequestBodyInitialType = undefined,
+  P extends RequestParamsInitialType = undefined,
+  Q extends RequestQueryInitialType = undefined,
 > = {
   execute: () => undefined | Promise<R>;
   isValid: Ref<boolean>;
@@ -38,9 +40,9 @@ function useRequest<
 
 function useRequest<
   R,
-  B extends object | undefined | null,
-  P extends object | undefined | null,
-  Q extends undefined | null | Record<string, string | number>,
+  B extends RequestBodyInitialType,
+  P extends RequestParamsInitialType,
+  Q extends RequestQueryInitialType,
 >(
   request: PreparedRequestType<R, B, P, Q>,
   parametersGetter?: () => RequestParametersType<B, P, Q>,
@@ -73,7 +75,7 @@ function useRequest<
       additionalIsValid.value,
   );
 
-  const execute = () => {
+  const execute = (): Promise<R> | undefined => {
     if (!isValid.value || isLoading.value) return;
     isLoading.value = true;
     return request(parameters.value as RequestParametersType<B, P, Q>, {
