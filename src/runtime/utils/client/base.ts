@@ -12,7 +12,7 @@ class ClientStrictFetch extends CommonStrictFetch {
     return useNuxtApp();
   }
 
-  get additionalHeaders() {
+  protected get additionalHeaders() {
     const config = useRuntimeConfig();
 
     const cookies = this.app.ssrContext?.event.headers?.get('cookie');

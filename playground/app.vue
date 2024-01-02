@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data, error } = await useAsyncData(() => CommonAPI.list());
+const { data } = await useAsyncData(() => CommonAPI.list());
 
 const name = ref('');
 
