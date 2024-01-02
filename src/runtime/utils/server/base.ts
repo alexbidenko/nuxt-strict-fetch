@@ -1,4 +1,6 @@
-import {StrictFetchConstructor} from "../common/base";
+import {CommonStrictFetch} from "../common/base";
 import type {IStrictFetch} from "../common/types";
 
-export const StrictFetch: IStrictFetch = new StrictFetchConstructor();
+class ServerStrictFetch extends CommonStrictFetch {}
+
+export const StrictFetch: IStrictFetch = new ServerStrictFetch();

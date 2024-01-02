@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { CommonAPI } from '~/utils/api'
-
-const { data } = useAsyncData(() => CommonAPI.list());
+const { data, error } = await useAsyncData(() => CommonAPI.list());
 
 const name = ref('');
 

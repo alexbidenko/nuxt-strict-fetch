@@ -98,7 +98,7 @@ export type PrepareRequestSettings<R, B, P, Q> = {
 };
 
 export interface IStrictFetch {
-  autoInit: () => void;
+  autoInit?: () => void;
 
   init: (options: StrictFetchOptions) => void;
 

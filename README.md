@@ -284,7 +284,7 @@ const CommonAPI = {
 
 ## Global catching
 
-If you with to define some logic for request catching, you might do it in options:
+If you wish to define some logic for catching request, you might do it in options:
 
 ```ts
 StrictFetch.init({

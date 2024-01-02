@@ -8,7 +8,6 @@ import type {
   RequestBodyInitialType,
   RequestParamsInitialType,
   RequestQueryInitialType,
-  SimpleNuxtApp,
   StrictFetchOptions,
   PrepareRequestSettings,
 } from './types';
@@ -20,41 +19,34 @@ import {
   RequestError,
   ResponseError,
 } from './types';
+import {useRuntimeConfig} from "#imports";
 
-export class StrictFetchConstructor implements IStrictFetch {
-  private readonly _useApp?: () => SimpleNuxtApp;
-
-  constructor(useApp?: () => SimpleNuxtApp) {
-    this._useApp = useApp;
-  }
-
-  get app() {
-    return this._useApp?.();
-  }
-
-  autoInit = () => {
-    this.app?.provide('strictFetch', {
-      options: {},
-      orderRequests: {},
-      orderHooks: {},
-      methodSignals: {},
-    } as PluginOptionsType)
+export class CommonStrictFetch implements IStrictFetch {
+  private readonly _config: PluginOptionsType = {
+    options: {},
+    orderRequests: {},
+    orderHooks: {},
+    methodSignals: {},
   };
 
-  init = (options: StrictFetchOptions) => {
-    const nuxtApp = this.app;
+  protected get config(): PluginOptionsType {
+    return this._config;
+  }
 
-    if (nuxtApp) Object.assign(nuxtApp.$strictFetch.options, options);
+  protected get additionalHeaders() {
+    return {};
+  }
+
+  init = (options: StrictFetchOptions) => {
+    Object.assign(this.config.options, options);
   };
 
   hooks = {
     subscribe: (key: HookKey, handler: () => void) => {
-      const options = this.app?.$strictFetch;
-      if (options) options.orderHooks[key] = [...(options.orderHooks[key] || []), handler];
+      this.config.orderHooks[key] = [...(this.config.orderHooks[key] || []), handler];
     },
     unsubscribe: (key: HookKey, handler: () => void) => {
-      const options = this.app?.$strictFetch;
-      if (options) options.orderHooks[key] = options.orderHooks[key]?.filter(
+      this.config.orderHooks[key] = this.config.orderHooks[key]?.filter(
         (el) => el !== handler,
       );
     },
@@ -150,19 +142,19 @@ export class StrictFetchConstructor implements IStrictFetch {
       parameters,
       additionalOptions = {},
     ) => {
-      const nuxtApp = this.app;
-      const cookies = nuxtApp?.ssrContext?.event.headers?.get('cookie');
-
+      const runtimeConfig = useRuntimeConfig();
+      const config = this.config;
+      const additionalHeaders = this.additionalHeaders;
       const baseOptions = mergeOptions(
         options,
         additionalOptions,
-        nuxtApp?.$config.public.strictFetchOptions,
-        nuxtApp?.$strictFetch.options,
+        runtimeConfig.public.strictFetchOptions,
+        config.options,
       );
 
       try {
         const [body, params, query] = await Promise.all([
-          validateParameters(schemas, parameters, 'body' as const),
+          validateParameters(schemas, parameters, 'body'),
           validateParameters(schemas, parameters, 'params'),
           validateParameters(schemas, parameters, 'query'),
         ]);
@@ -170,7 +162,7 @@ export class StrictFetchConstructor implements IStrictFetch {
         const data = await this.execute<R>(
           typeof url === 'function' ? url(params as P) : url,
           mergeOptions(baseOptions, {
-            headers: baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {},
+            headers: additionalHeaders,
             method,
             params: query,
             body: prepareRequestBody(body, baseOptions),
@@ -196,7 +188,7 @@ export class StrictFetchConstructor implements IStrictFetch {
                 .with(context.error);
             },
           }),
-          nuxtApp?.$strictFetch,
+          config,
         );
 
         const responseData = caseTransfer(data, Case.camel);

@@ -6,6 +6,6 @@ type JokeType = {
 
 export const ServerAPI = {
   joke: StrictFetch.prepare<JokeType>({
-    url: 'https://official-joke-api.appspot.com/random_joke',
+    url: 'random_joke',
   }),
 };
