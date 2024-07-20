@@ -15,16 +15,22 @@ export enum Case {
 }
 
 export enum HTTPMethod {
+  head = 'head',
   get = 'get',
   post = 'post',
   put = 'put',
   patch = 'patch',
   delete = 'delete',
+  connect = 'connect',
+  options = 'options',
+  trace = 'trace',
 }
 
 export type StrictFetchContext = InitialFetchContext;
 
-export type StrictFetchOptions = Omit<InitialFetchOptions, 'method'> & {
+export type DynamicFetchOptions = Omit<InitialFetchOptions, 'method'>;
+
+export type StrictFetchOptions = DynamicFetchOptions & {
   method?: HTTPMethod;
   orderKey?: string;
   groupKey?: string;

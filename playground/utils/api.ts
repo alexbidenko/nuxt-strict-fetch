@@ -1,7 +1,11 @@
-import {array, object, string} from "yup";
+import {array, boolean, object, string} from "yup";
 
 const createItemBodySchema = object().required().shape({
   name: string().required(),
+});
+
+const createItemQuerySchema = object().required().shape({
+  test: boolean().required(),
 });
 
 const itemSchema = object().required().shape({
@@ -26,7 +30,7 @@ export const CommonAPI = {
   createItem: StrictFetch.prepare({
     url: 'list',
     method: HTTPMethod.post,
-    schemas: { response: itemSchema, body: createItemBodySchema },
+    schemas: { response: itemSchema, body: createItemBodySchema, query: createItemQuerySchema },
   }),
   details: StrictFetch.prepare<number[], null, {id: number}, {filter?: boolean}>({
     url: ({ id }) => `list/${id}`,

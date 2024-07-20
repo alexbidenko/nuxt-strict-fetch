@@ -2,6 +2,7 @@ import type { Ref } from 'vue';
 import { computed, ref } from '#imports';
 
 import type {
+  DynamicFetchOptions,
   PreparedRequestType,
   RequestParametersType,
   RequestBodyInitialType,
@@ -75,12 +76,10 @@ function useRequest<
       additionalIsValid.value,
   );
 
-  const execute = (): Promise<R> | undefined => {
+  const execute = (options?: DynamicFetchOptions): Promise<R> | undefined => {
     if (!isValid.value || isLoading.value) return;
     isLoading.value = true;
-    return request(parameters.value as RequestParametersType<B, P, Q>, {
-      query: query.value,
-    }).finally(() => (isLoading.value = false));
+    return request(parameters.value as RequestParametersType<B, P, Q>, options).finally(() => (isLoading.value = false));
   };
 
   return {

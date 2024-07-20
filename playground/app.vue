@@ -5,6 +5,7 @@ const name = ref('');
 
 const { execute, isValid, isLoading } = useRequest(CommonAPI.createItem, () => ({
   body: { name: name.value },
+  query: { test: true },
 }));
 
 const onSubmit = () => {
