@@ -15,7 +15,7 @@ type UseRequestReturnType<
   P extends RequestParamsInitialType = undefined,
   Q extends RequestQueryInitialType = undefined,
 > = {
-  execute: () => undefined | Promise<R>
+  execute: (options?: DynamicFetchOptions) => undefined | Promise<R>
   isValid: Ref<boolean>
   isLoading: Ref<boolean>
   parameters: Ref<RequestParametersType<B, P, Q>>
