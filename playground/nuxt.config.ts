@@ -3,5 +3,5 @@ export default defineNuxtConfig({
   strictFetch: {
     baseURL: '/api/',
   },
-  devtools: { enabled: true }
+  devtools: { enabled: true },
 })

@@ -1,1 +1,1 @@
-export default defineEventHandler(() => [{ id: crypto.randomUUID(), name: 'test' }]);
+export default defineEventHandler(() => [{ id: crypto.randomUUID(), name: 'test' }])

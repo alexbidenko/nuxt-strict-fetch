@@ -1,30 +1,30 @@
 <script setup lang="ts">
-const { data } = await useAsyncData(() => CommonAPI.list());
+const { data } = await useAsyncData(() => CommonAPI.list())
 
-const name = ref('');
+const name = ref('')
 
 const { execute, isValid, isLoading } = useRequest(CommonAPI.createItem, () => ({
   body: { name: name.value },
   query: { test: true },
-}));
+}))
 
 const onSubmit = () => {
   execute()?.then((item) => {
-    name.value = '';
+    name.value = ''
 
-    data.value?.push(item);
+    data.value?.push(item)
   }).catch((e) => {
-    alert(e.message);
-  });
-};
+    alert(e.message)
+  })
+}
 
 const randomJoke = () => {
   CommonAPI.joke().then((joke) => {
-    alert(joke.setup + '\n\n' + joke.punchline);
+    alert(joke.setup + '\n\n' + joke.punchline)
   })
-};
+}
 
-const checkExpired = () => CommonAPI.checkExpired();
+const checkExpired = () => CommonAPI.checkExpired()
 </script>
 
 <template>

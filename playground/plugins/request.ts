@@ -4,7 +4,7 @@ export default defineNuxtPlugin(() => {
       context.options.headers = {
         ...context.options.headers,
         Custom: 'Value',
-      };
+      }
     },
-  });
-});
+  })
+})

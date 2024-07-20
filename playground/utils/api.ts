@@ -1,26 +1,26 @@
-import {array, boolean, object, string} from "yup";
+import { array, boolean, object, string } from 'yup'
 
 const createItemBodySchema = object().required().shape({
   name: string().required(),
-});
+})
 
 const createItemQuerySchema = object().required().shape({
   test: boolean().required(),
-});
+})
 
 const itemSchema = object().required().shape({
   id: string().required(),
   name: string().required(),
-});
+})
 
-const listSchema = array().required().of(itemSchema);
+const listSchema = array().required().of(itemSchema)
 
 const jokeSchema = object().required().shape({
   id: string().required(),
   type: string().required(),
   setup: string().required(),
   punchline: string().required(),
-});
+})
 
 export const CommonAPI = {
   list: StrictFetch.prepare({
@@ -32,7 +32,7 @@ export const CommonAPI = {
     method: HTTPMethod.post,
     schemas: { response: itemSchema, body: createItemBodySchema, query: createItemQuerySchema },
   }),
-  details: StrictFetch.prepare<number[], null, {id: number}, {filter?: boolean}>({
+  details: StrictFetch.prepare<number[], null, { id: number }, { filter?: boolean }>({
     url: ({ id }) => `list/${id}`,
   }),
   joke: StrictFetch.prepare({
@@ -40,7 +40,7 @@ export const CommonAPI = {
     schemas: { response: jokeSchema },
     options: { selfInterrupted: true },
   }),
-  checkExpired: StrictFetch.prepare<{status: boolean}>({
+  checkExpired: StrictFetch.prepare<{ status: boolean }>({
     url: 'authorized',
     options: {
       onRequest(context) {
@@ -53,11 +53,11 @@ export const CommonAPI = {
           expiredAt.setSeconds(expiredAt.getSeconds() + 5)
           localStorage.setItem('expired_at', expiredAt.toISOString())
 
-          return CommonAPI.checkExpired();
+          return CommonAPI.checkExpired()
         }
 
         throw error
       },
     },
-  })
-};
+  }),
+}

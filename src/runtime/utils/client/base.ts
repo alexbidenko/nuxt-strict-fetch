@@ -1,28 +1,28 @@
-import {CommonStrictFetch} from "../common/base";
-import {useNuxtApp, useRuntimeConfig} from "#imports";
-import type {IStrictFetch, PluginOptionsType} from "../common/types";
-import {mergeOptions} from "../common/utils";
+import { CommonStrictFetch } from '../common/base'
+import type { IStrictFetch, PluginOptionsType } from '../common/types'
+import { mergeOptions } from '../common/utils'
+import { useNuxtApp, useRuntimeConfig } from '#imports'
 
 class ClientStrictFetch extends CommonStrictFetch {
-  protected get config(): PluginOptionsType {
-    return this.app.$strictFetch;
+  protected override get config(): PluginOptionsType {
+    return this.app.$strictFetch
   }
 
   protected get app() {
-    return useNuxtApp();
+    return useNuxtApp()
   }
 
-  protected get additionalHeaders() {
-    const config = useRuntimeConfig();
+  protected override get additionalHeaders() {
+    const config = useRuntimeConfig()
 
-    const cookies = this.app.ssrContext?.event.headers?.get('cookie');
+    const cookies = this.app.ssrContext?.event.headers?.get('cookie')
 
     const baseOptions = mergeOptions(
       config.public.strictFetchOptions,
       this.config.options,
-    );
+    )
 
-    return baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {};
+    return baseOptions.proxyServerCookies && cookies ? { Cookie: cookies } : {}
   }
 
   autoInit = () => {
@@ -32,7 +32,7 @@ class ClientStrictFetch extends CommonStrictFetch {
       orderHooks: {},
       methodSignals: {},
     } as PluginOptionsType)
-  };
+  }
 }
 
-export const StrictFetch: IStrictFetch = new ClientStrictFetch();
+export const StrictFetch: IStrictFetch = new ClientStrictFetch()
