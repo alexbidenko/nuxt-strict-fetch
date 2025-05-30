@@ -4,8 +4,8 @@ export const isObject = (o: unknown) =>
   o === Object(o) && !Array.isArray(o) && typeof o !== 'function'
 
 export const toCamelCase = (s: string) =>
-  s.replace(/([-_][a-z])/gi, $1 =>
-    $1.toUpperCase().replace('-', '').replace('_', ''),
+  s.replace(/(_[a-z])/gi, $1 =>
+    $1.toUpperCase().replace('_', ''),
   )
 
 export const toSnakeCase = (str: string) =>

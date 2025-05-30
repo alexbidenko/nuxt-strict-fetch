@@ -14,7 +14,7 @@
     },
     "./types": "./dist/runtime/types.d.ts",
     "./common": {
-      "types":  "./dist/runtime/utils/common/base.d.ts",
+      "types": "./dist/runtime/utils/common/base.d.ts",
       "import": "./dist/runtime/utils/common/base.mjs"
     }
   },
@@ -36,23 +36,23 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.12.4",
-    "yup": "^1.4.0"
+    "@nuxt/kit": "^3.17.4",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.3.9",
-    "@nuxt/eslint-config": "^0.3.13",
-    "@nuxt/module-builder": "^0.8.1",
-    "@nuxt/schema": "^3.12.4",
-    "@nuxt/test-utils": "^3.12.0",
-    "@types/node": "^20.11.30",
-    "changelogen": "^0.5.5",
-    "eslint": "^9.7.0",
-    "nuxt": "^3.12.4",
-    "ofetch": "^1.3.4",
-    "typescript": "^5.5.3",
-    "vitest": "^1.4.0",
-    "vue-tsc": "^2.0.26"
+    "@nuxt/devtools": "^1.7.0",
+    "@nuxt/eslint-config": "^0.7.6",
+    "@nuxt/module-builder": "^0.8.4",
+    "@nuxt/schema": "^3.17.4",
+    "@nuxt/test-utils": "^3.19.1",
+    "@types/node": "^22.15.27",
+    "changelogen": "^0.6.1",
+    "eslint": "^9.27.0",
+    "nuxt": "^3.17.4",
+    "ofetch": "^1.4.1",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9",
+    "vue-tsc": "^2.2.10"
   },
   "unbuild": {
     "failOnWarn": false
