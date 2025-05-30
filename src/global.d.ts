@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { NuxtPluginType, StrictFetchOptions } from './runtime/utils/common/types'
 
 declare module '#app' {
