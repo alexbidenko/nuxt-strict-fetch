@@ -14,7 +14,6 @@ import type {
 } from './types';
 import { Case, HTTPError, HTTPMethod, RequestError, ResponseError } from './types';
 import { useRuntimeConfig } from '#imports';
-import type { $Fetch } from 'nitropack';
 
 export class CommonStrictFetch implements IStrictFetch {
   private readonly _config: PluginOptionsType = {

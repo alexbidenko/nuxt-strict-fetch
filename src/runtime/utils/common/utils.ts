@@ -1,3 +1,4 @@
+import { useRuntimeConfig } from '#imports';
 import {Case, ValidatorOption} from './types';
 import type {
   AbstractSchemas,
