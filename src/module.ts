@@ -46,14 +46,14 @@ export default defineNuxtModule<ModuleOptions>({
         case ValidatorOption.YUP: {
           addTypeTemplate({
             filename: 'types/nuxt-strict-fetch.d.ts',
-            src: resolver.resolve('./schemas/yup-validator.d.ts'),
+            src: resolver.resolve('./runtime/schemas/yup-validator.d.ts'),
           });
           break;
         }
         case ValidatorOption.ZOD: {
           addTypeTemplate({
             filename: 'types/nuxt-strict-fetch.d.ts',
-            src: resolver.resolve('./schemas/zod-validator.d.ts'),
+            src: resolver.resolve('./runtime/schemas/zod-validator.d.ts'),
           });
           break;
         }

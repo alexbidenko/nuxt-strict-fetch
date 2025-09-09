@@ -18,8 +18,7 @@
     }
   },
   "files": [
-    "dist",
-    "schemas"
+    "dist"
   ],
   "scripts": {
     "prepare": "nuxi prepare",
