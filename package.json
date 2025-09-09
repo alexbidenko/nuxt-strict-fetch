@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",
@@ -8,18 +8,15 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
     },
     "./types": "./dist/runtime/types.d.ts",
     "./common": {
       "types": "./dist/runtime/utils/common/base.d.ts",
-      "import": "./dist/runtime/utils/common/base.mjs"
+      "import": "./dist/runtime/utils/common/base.js"
     }
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
   "files": [
     "dist"
   ],
@@ -30,31 +27,31 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
-    "lint": "eslint .",
+    "format": "prettier --write .",
+    "lint": "oxlint -c .oxlintrc.json --type-aware --format unix",
+    "lint:fix": "pnpm run lint --fix --fix-suggestions",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.4",
-    "yup": "^1.6.1"
+    "@nuxt/kit": "^4.1.1",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.7.0",
-    "@nuxt/eslint-config": "^0.7.6",
-    "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^3.17.4",
-    "@nuxt/test-utils": "^3.19.1",
-    "@types/node": "^22.15.27",
-    "changelogen": "^0.6.1",
-    "eslint": "^9.27.0",
-    "nuxt": "^3.17.4",
+    "@nuxt/devtools": "^2.6.3",
+    "@nuxt/module-builder": "^1.0.2",
+    "@nuxt/schema": "^4.1.1",
+    "@nuxt/test-utils": "^3.19.2",
+    "@types/node": "^24.3.1",
+    "changelogen": "^0.6.2",
+    "nuxt": "^4.1.1",
     "ofetch": "^1.4.1",
+    "oxlint": "^1.14.0",
+    "oxlint-tsgolint": "^0.1.6",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3",
-    "vitest": "^2.1.9",
-    "vue-tsc": "^2.2.10"
-  },
-  "unbuild": {
-    "failOnWarn": false
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.6"
   }
 }

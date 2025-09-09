@@ -3,15 +3,21 @@
   "name": "nuxt-strict-fetch-playground",
   "type": "module",
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "generate": "nuxi generate",
-    "postinstall": "nuxi prepare",
-    "typecheck": "nuxi typecheck"
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
   },
   "devDependencies": {
-    "nuxt": "^3.17.4",
-    "typescript": "^5.8.3",
-    "vue-tsc": "^2.2.10"
-  }
+    "nuxt": "^4.1.1",
+    "typescript": "^5.9.2",
+    "vue-tsc": "^3.0.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@^7.1.5"
+    }
+  },
+  "packageManager": "pnpm@^10.15.1"
 }

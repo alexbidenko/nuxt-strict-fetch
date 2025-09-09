@@ -1,1 +1,1 @@
-export default defineEventHandler(() => ServerAPI.joke())
+export default defineEventHandler(() => ServerAPI.joke());

@@ -1,26 +1,26 @@
-import { array, boolean, object, string } from 'yup'
+import { array, boolean, object, string } from 'yup';
 
 const createItemBodySchema = object().required().shape({
   name: string().required(),
-})
+});
 
 const createItemQuerySchema = object().required().shape({
   test: boolean().required(),
-})
+});
 
 const itemSchema = object().required().shape({
   id: string().required(),
   name: string().required(),
-})
+});
 
-const listSchema = array().required().of(itemSchema)
+const listSchema = array().required().of(itemSchema);
 
 const jokeSchema = object().required().shape({
   id: string().required(),
   type: string().required(),
   setup: string().required(),
   punchline: string().required(),
-})
+});
 
 export const CommonAPI = {
   list: StrictFetch.prepare({
@@ -29,7 +29,7 @@ export const CommonAPI = {
   }),
   createItem: StrictFetch.prepare({
     url: 'list',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
     schemas: { response: itemSchema, body: createItemBodySchema, query: createItemQuerySchema },
   }),
   details: StrictFetch.prepare<number[], null, { id: number }, { filter?: boolean }>({
@@ -44,20 +44,20 @@ export const CommonAPI = {
     url: 'authorized',
     options: {
       onRequest(context) {
-        const expiredAt = localStorage.getItem('expired_at')
-        if (expiredAt) context.options.headers = { 'x-expired-at': expiredAt }
+        const expiredAt = localStorage.getItem('expired_at');
+        if (expiredAt) context.options.headers.set('x-expired-at', expiredAt);
       },
       catch(error): Promise<any> {
         if (error.context?.response?.status === 401) {
-          const expiredAt = new Date()
-          expiredAt.setSeconds(expiredAt.getSeconds() + 5)
-          localStorage.setItem('expired_at', expiredAt.toISOString())
+          const expiredAt = new Date();
+          expiredAt.setSeconds(expiredAt.getSeconds() + 5);
+          localStorage.setItem('expired_at', expiredAt.toISOString());
 
-          return CommonAPI.checkExpired()
+          return CommonAPI.checkExpired();
         }
 
-        throw error
+        throw error;
       },
     },
   }),
-}
+};

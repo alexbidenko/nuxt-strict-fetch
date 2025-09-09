@@ -8,12 +8,13 @@
 My new Nuxt module for doing amazing things.
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/alexbidenko/nuxt-strict-fetch?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
+  <!-- - [🏀 Online playground](https://stackblitz.com/github/alexbidenko/nuxt-strict-fetch?file=playground%2Fapp.vue) -->
+  <!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
 
 <!-- Highlight some of the features your module provide here -->
+
 - ⛰ &nbsp;Foo
 - 🚠 &nbsp;Bar
 - 🌲 &nbsp;Baz
@@ -37,10 +38,8 @@ npm install --save-dev nuxt-strict-fetch
 
 ```ts
 export default defineNuxtConfig({
-  modules: [
-    'nuxt-strict-fetch'
-  ]
-})
+  modules: ['nuxt-strict-fetch'],
+});
 ```
 
 That's it! You can now use Nuxt Strict Fetch in your Nuxt app ✨
@@ -49,14 +48,12 @@ That's it! You can now use Nuxt Strict Fetch in your Nuxt app ✨
 
 ```ts
 export default defineNuxtConfig({
-  modules: [
-    'nuxt-strict-fetch'
-  ],
+  modules: ['nuxt-strict-fetch'],
   strictFetch: {
     // base URL for all requests
     baseURL: '/api/',
   },
-})
+});
 ```
 
 ## Plugin Setup
@@ -69,10 +66,7 @@ export default defineNuxtPlugin(() => {
 
   StrictFetch.init({
     onRequest(context) {
-      context.options.headers = {
-        ...context.options.headers,
-        Custom: 'Value',
-      };
+      context.options.headers.set('Custom-Key', 'value');
     },
     fetch: $csrfFetch, // option for default Nuxt $fetch reassignment
   });
@@ -88,11 +82,11 @@ Nuxt Strict Fetch module assumes the following method declaration:
 
 type Filter = { name?: string };
 
-type Item = { id: number; name: string; };
+type Item = { id: number; name: string };
 
 type List = { items: Item[] };
 
-type CreateItem = { name: string; };
+type CreateItem = { name: string };
 
 const CommonAPI = {
   list: StrictFetch.prepare<List, null, null, Filter>({
@@ -100,18 +94,18 @@ const CommonAPI = {
   }),
   create: StrictFetch.prepare<Item, CreateItem>({
     url: 'list',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
   }),
   details: StrictFetch.prepare<Item, null, { id: number }>({
     url: ({ id }) => `list/${id}`,
   }),
-}
+};
 ```
 
 `prepare` method has the following generic types:
 
 ```ts
-StrictFetch.prepare<R /* response body */, B /* common body */, P /* common params */, Q /* common query */>
+StrictFetch.prepare<R /* response body */, B /* common body */, P /* common params */, Q /* common query */>;
 ```
 
 Also, you may define API with validation schemas:
@@ -144,14 +138,14 @@ const CommonAPI = {
   }),
   create: StrictFetch.prepare({
     url: 'list',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
     schemas: { response: itemSchema, body: createItemBodySchema },
   }),
   details: StrictFetch.prepare({
     url: ({ id }) => `list/${id}`,
     schemas: { response: itemSchema, params: detailsParamsSchema },
   }),
-}
+};
 ```
 
 The second way also provide `useRequest` composable validation feature.
@@ -159,6 +153,7 @@ The second way also provide `useRequest` composable validation feature.
 ## Composables
 
 Module provides the following composable methods:
+
 - `useRequest` - method for using API method validation, state and TypeScript supporting for data.
 
 ```ts
@@ -180,7 +175,7 @@ const {
 );
 
 const onSubmit = () => {
-  execute()?.then( /* ... */ ).catch( /* ... */ );
+  execute()?.then(/* ... */).catch(/* ... */);
 };
 ```
 
@@ -189,13 +184,21 @@ const onSubmit = () => {
 Nuxt Strict Fetch module provides the opportunity to subscribe to API events:
 
 ```ts
-StrictFetch.hooks.subscribe('method:create:start', () => { /* ... */ });
+StrictFetch.hooks.subscribe('method:create:start', () => {
+  /* ... */
+});
 
-StrictFetch.hooks.subscribe('method:create:finish', () => { /* ... */ });
+StrictFetch.hooks.subscribe('method:create:finish', () => {
+  /* ... */
+});
 
-StrictFetch.hooks.unsubscribe('method:create:start', () => { /* ... */ });
+StrictFetch.hooks.unsubscribe('method:create:start', () => {
+  /* ... */
+});
 
-StrictFetch.hooks.unsubscribe('method:create:finish', () => { /* ... */ });
+StrictFetch.hooks.unsubscribe('method:create:finish', () => {
+  /* ... */
+});
 
 // where `create` is methodKey field of the method
 ```
@@ -226,7 +229,9 @@ OrderAPI.second(); // will wait for first common finish
 ```ts
 const options = {
   selfInterrupted: true, // will interrupt previous requests when new common will be executed
-  onError: () => { /* ... */ }, // will be called on error but ignored 'AbortError' error
+  onError: () => {
+    /* ... */
+  }, // will be called on error but ignored 'AbortError' error
   methodKey: 'my-method', // key of method for subscribing
   orderKey: 'my-order', // key of order for subscribing or ordering requests
   proxyServerCookies: true, // will send cookies from browser for common on server side
@@ -241,7 +246,7 @@ StrictFetch.init(options);
 StrictFetch.prepare({
   url: 'url',
   ...options,
-})
+});
 ```
 
 ## Work with FormData
@@ -256,12 +261,12 @@ const FormDataAPI = {
   }),
   second: StrictFetch.prepare<null, { name: string; file: File; tags: string[] }>({
     url: 'form-data-url',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
     // will be converted to FormData automatically
     // `name` and `file` as is
     // `tags` as array of FormData fields with the same key
     formData: true,
-  })
+  }),
 };
 
 // in plugin
@@ -272,11 +277,11 @@ StrictFetch.init({ formData: true });
 const CommonAPI = {
   formDataMethod: StrictFetch.prepare<null, { name: string; file: File; tags: string[] }>({
     url: 'form-data-url',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
   }),
   jsonDataMethod: StrictFetch.prepare<null, { name: string; tags: string[] }>({
     url: 'json-data-url',
-    method: HTTPMethod.post,
+    method: HTTPMethod.POST,
     formData: false, // disabling for current method
   }),
 };
@@ -289,22 +294,22 @@ If you wish to define some logic for catching request, you might do it in option
 ```ts
 StrictFetch.init({
   onRequest(context) {
-    const expiredAt = localStorage.getItem('token')
-    if (expiredAt) context.options.headers = { 'x-token': expiredAt }
+    const expiredAt = localStorage.getItem('token');
+    if (expiredAt) context.options.headers.set('x-expired-at', expiredAt);
   },
   catch(error) {
     if (error.context.response.status === 401) {
-      const expiredAt = new Date()
-      expiredAt.setSeconds(expiredAt.getSeconds() + 5)
-      localStorage.setItem('token', expiredAt.toISOString())
+      const expiredAt = new Date();
+      expiredAt.setSeconds(expiredAt.getSeconds() + 5);
+      localStorage.setItem('token', expiredAt.toISOString());
 
       // Request repeating for example
       return $fetch(error.context.request, error.context.options);
     }
 
-    throw error
+    throw error;
   },
-})
+});
 ```
 
 ## Import types
@@ -342,14 +347,12 @@ npm run release
 ```
 
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-strict-fetch/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-strict-fetch
-
 [npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-strict-fetch.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-downloads-href]: https://npmjs.com/package/nuxt-strict-fetch
-
 [license-src]: https://img.shields.io/npm/l/nuxt-strict-fetch.svg?style=flat&colorA=18181B&colorB=28CF8D
 [license-href]: https://npmjs.com/package/nuxt-strict-fetch
-
 [nuxt-src]: https://img.shields.io/badge/Nuxt-18181B?logo=nuxt.js
 [nuxt-href]: https://nuxt.com

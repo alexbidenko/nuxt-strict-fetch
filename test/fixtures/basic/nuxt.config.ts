@@ -1,7 +1,5 @@
-import NuxtStrictFetch from '../../../src/module'
+import NuxtStrictFetch from '../../../src/module';
 
 export default defineNuxtConfig({
-  modules: [
-    NuxtStrictFetch,
-  ],
-})
+  modules: [NuxtStrictFetch],
+});

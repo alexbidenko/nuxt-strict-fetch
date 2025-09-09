@@ -1,0 +1,3 @@
+{
+  "plugins": ["unicorn", "oxc", "import", "node", "promise", "vue"]
+}
