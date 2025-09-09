@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "name": "nuxt-strict-fetch-playground",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --port 3001",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "nuxt": "^4.1.1",
+    "typescript": "^5.9.2",
+    "vue-tsc": "^3.0.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:rolldown-vite@^7.1.5"
+    }
+  },
+  "packageManager": "pnpm@10.15.1"
+}

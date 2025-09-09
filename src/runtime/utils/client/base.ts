@@ -5,7 +5,7 @@ import { useNuxtApp, useRuntimeConfig } from '#imports';
 
 class ClientStrictFetch extends CommonStrictFetch {
   protected override get config(): PluginOptionsType {
-    return this.app.$strictFetch;
+    return this.app.$strictFetch as PluginOptionsType;
   }
 
   protected get app() {
@@ -23,12 +23,12 @@ class ClientStrictFetch extends CommonStrictFetch {
   }
 
   autoInit = () => {
-    this.app.provide('strictFetch', {
+    this.app.provide('strictFetch', <PluginOptionsType>{
       options: {},
       orderRequests: {},
       orderHooks: {},
       methodSignals: {},
-    } as PluginOptionsType);
+    });
   };
 }
 

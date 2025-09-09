@@ -8,7 +8,7 @@ export const toSnakeCase = (str: string) => str.replace(/[A-Z]/g, (letter) => `_
 
 export const caseTransfer = (o: any, type: Case): any => {
   if (isObject(o)) {
-    const n = {} as Record<string, unknown>;
+    const n: Record<string, unknown> = {};
 
     Object.entries(o as object).forEach(([k, v]) => {
       n[(type === Case.CAMEL ? toCamelCase : toSnakeCase)(k)] = caseTransfer(v, type);

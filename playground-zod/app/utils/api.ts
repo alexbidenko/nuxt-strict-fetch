@@ -1,25 +1,25 @@
-import { array, boolean, object, string } from 'yup';
+import { array, boolean, object, string } from 'zod';
 
-const createItemBodySchema = object().required().shape({
-  name: string().required(),
+const createItemBodySchema = object({
+  name: string().min(2),
 });
 
-const createItemQuerySchema = object().required().shape({
-  test: boolean().required(),
+const createItemQuerySchema = object({
+  test: boolean(),
 });
 
-const itemSchema = object().required().shape({
-  id: string().required(),
-  name: string().required(),
+const itemSchema = object({
+  id: string(),
+  name: string(),
 });
 
-const listSchema = array().required().of(itemSchema);
+const listSchema = array(itemSchema);
 
-const jokeSchema = object().required().shape({
-  id: string().required(),
-  type: string().required(),
-  setup: string().required(),
-  punchline: string().required(),
+const jokeSchema = object({
+  id: string(),
+  type: string(),
+  setup: string(),
+  punchline: string(),
 });
 
 export const CommonAPI = {

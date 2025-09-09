@@ -1,5 +1,5 @@
 import { caseTransfer } from './cases';
-import { mergeOptions, prepareRequestBody, validateParameters } from './utils';
+import { mergeOptions, prepareRequestBody, validateParameters, getValidatorAdapter } from './utils';
 import type {
   IStrictFetch,
   HookKey,
@@ -14,6 +14,7 @@ import type {
 } from './types';
 import { Case, HTTPError, HTTPMethod, RequestError, ResponseError } from './types';
 import { useRuntimeConfig } from '#imports';
+import type { $Fetch } from 'nitropack';
 
 export class CommonStrictFetch implements IStrictFetch {
   private readonly _config: PluginOptionsType = {
@@ -79,7 +80,7 @@ export class CommonStrictFetch implements IStrictFetch {
       });
     }
 
-    return fetch<R>(url, {
+    return fetch<R, string>(url, {
       signal: methodKey ? pluginOptions?.methodSignals[methodKey]?.signal : null,
       ...options,
     })
@@ -113,13 +114,14 @@ export class CommonStrictFetch implements IStrictFetch {
   >({
     url,
     method = HTTPMethod.GET,
-    schemas,
     options = {},
+    ...rest
   }: PrepareRequestSettings<R, B, P, Q>) => {
     options = this.setupDefaultOptions(options);
 
     const executor: PreparedRequestType<R, B, P, Q> = async (parameters, additionalOptions = {}) => {
       const runtimeConfig = useRuntimeConfig();
+      const validator = getValidatorAdapter<R, B, P, Q>((rest as any).schemas);
       const config = this.config;
       const additionalHeaders = this.additionalHeaders;
       const baseOptions = mergeOptions(
@@ -131,9 +133,9 @@ export class CommonStrictFetch implements IStrictFetch {
 
       try {
         const [body, params, query] = await Promise.all([
-          validateParameters(schemas, parameters, 'body'),
-          validateParameters(schemas, parameters, 'params'),
-          validateParameters(schemas, parameters, 'query'),
+          validateParameters(validator, parameters, 'body'),
+          validateParameters(validator, parameters, 'params'),
+          validateParameters(validator, parameters, 'query'),
         ]);
 
         const data = await this.execute<R>(
@@ -167,7 +169,7 @@ export class CommonStrictFetch implements IStrictFetch {
         );
 
         const responseData = caseTransfer(data, Case.CAMEL);
-        return (schemas?.response ? await schemas.response.validate(responseData) : responseData) as R;
+        return (validator?.response ? await validator.response.validate(responseData) : responseData) as R;
       } catch (e) {
         const error = e as FetchError;
         if (error.name !== HTTPError.AbortError) {
@@ -177,7 +179,7 @@ export class CommonStrictFetch implements IStrictFetch {
       }
     };
 
-    executor.schemas = schemas;
+    executor.schemas = (rest as any).schemas;
 
     return executor;
   };

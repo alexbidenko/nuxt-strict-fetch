@@ -5,20 +5,6 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-My new Nuxt module for doing amazing things.
-
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-  <!-- - [🏀 Online playground](https://stackblitz.com/github/alexbidenko/nuxt-strict-fetch?file=playground%2Fapp.vue) -->
-  <!-- - [📖 &nbsp;Documentation](https://example.com) -->
-
-## Features
-
-<!-- Highlight some of the features your module provide here -->
-
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
-
 ## Quick Setup
 
 1. Add `nuxt-strict-fetch` dependency to your project
@@ -52,6 +38,8 @@ export default defineNuxtConfig({
   strictFetch: {
     // base URL for all requests
     baseURL: '/api/',
+    // Specify validator for schema validation (e.g., 'yup' or 'zod')
+    validator: 'yup',
   },
 });
 ```
@@ -78,7 +66,7 @@ export default defineNuxtPlugin(() => {
 Nuxt Strict Fetch module assumes the following method declaration:
 
 ```ts
-// ~/api/common.ts for example
+// ~/app/utils/api.ts for example
 
 type Filter = { name?: string };
 
@@ -108,12 +96,15 @@ const CommonAPI = {
 StrictFetch.prepare<R /* response body */, B /* common body */, P /* common params */, Q /* common query */>;
 ```
 
-Also, you may define API with validation schemas:
+Also, you may define API with validation schemas using either Yup or Zod:
 
 ```ts
-// ~/api/common.ts for example
-import * as yup from 'yup';
+// ~/app/utils/api.ts for example
+import * as yup from 'yup'; // Install yup: npm install yup
+// OR
+// import { z } from 'zod'; // Install zod: npm install zod
 
+// Example using Yup
 const filterSchema = yup.object().shape({ name: yup.string() });
 
 const itemSchema = yup.object().required().shape({
@@ -131,6 +122,17 @@ const detailsParamsSchema = yup.object().required().shape({
   id: yup.number().required(),
 });
 
+// Example using Zod
+// const filterSchema = z.object({ name: z.string().optional() });
+//
+// const itemSchema = z.object({ id: z.string(), name: z.string() });
+//
+// const listSchema = z.array(itemSchema);
+//
+// const createItemBodySchema = z.object({ name: z.string() });
+//
+// const detailsParamsSchema = z.object({ id: z.number() });
+
 const CommonAPI = {
   list: StrictFetch.prepare({
     url: 'list',
@@ -147,13 +149,13 @@ const CommonAPI = {
   }),
 };
 ```
+> **Note**: To use schema validation, install either `yup` or `zod` as a dependency (`npm install yup` or `npm install zod`) and specify the validator in `nuxt.config.ts` under `strictFetch.validator` as `'yup'` or `'zod'`. This enables validation as described above.
 
-The second way also provide `useRequest` composable validation feature.
+The validation schemas provide `useRequest` composable validation feature.
 
 ## Composables
 
 Module provides the following composable methods:
-
 - `useRequest` - method for using API method validation, state and TypeScript supporting for data.
 
 ```ts
@@ -306,7 +308,6 @@ StrictFetch.init({
       // Request repeating for example
       return $fetch(error.context.request, error.context.options);
     }
-
     throw error;
   },
 });
@@ -335,8 +336,10 @@ npm run dev
 # Build the playground
 npm run dev:build
 
-# Run ESLint
+# Run Oxlint and Prettier
 npm run lint
+npm run lint:fix
+npm run format
 
 # Run Vitest
 npm run test
@@ -347,7 +350,6 @@ npm run release
 ```
 
 <!-- Badges -->
-
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-strict-fetch/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-strict-fetch
 [npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-strict-fetch.svg?style=flat&colorA=18181B&colorB=28CF8D

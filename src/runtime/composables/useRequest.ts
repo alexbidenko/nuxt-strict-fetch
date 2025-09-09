@@ -7,19 +7,20 @@ import type {
   RequestParamsInitialType,
   RequestQueryInitialType,
 } from '../utils/common/types';
+import { getValidatorAdapter } from '../utils/common/utils';
 import { computed, ref } from '#imports';
 
-type UseRequestReturnType<
+interface UseRequestReturnType<
   R,
   B extends RequestBodyInitialType = undefined,
   P extends RequestParamsInitialType = undefined,
   Q extends RequestQueryInitialType = undefined,
-> = {
+> {
   execute: (options?: DynamicFetchOptions) => undefined | Promise<R>;
   isValid: Ref<boolean>;
   isLoading: Ref<boolean>;
   parameters: Ref<RequestParametersType<B, P, Q>>;
-};
+}
 
 const useRequest: {
   <R>(request: PreparedRequestType<R>): UseRequestReturnType<R>;
@@ -49,6 +50,7 @@ const useRequest: {
 ) => {
   const isLoading = ref(false);
 
+  const validator = computed(() => getValidatorAdapter(request.schemas));
   const parameters = computed<RequestParametersType<B, P, Q>>(
     parametersGetter || (() => ({}) as RequestParametersType<B, P, Q>),
   );
@@ -59,11 +61,12 @@ const useRequest: {
   const query = computed(() => ('query' in parameters.value ? parameters.value.query : undefined));
 
   const isValid = computed(
-    () =>
-      (request.schemas?.body?.isValidSync(body.value) ?? true) &&
-      (request.schemas?.params?.isValidSync(params.value) ?? true) &&
-      (request.schemas?.query?.isValidSync(query.value) ?? true) &&
-      additionalIsValid.value,
+    () => (
+      (validator.value?.body?.isValid(body.value) ?? true) &&
+      (validator.value?.params?.isValid(params.value) ?? true) &&
+      (validator.value?.query?.isValid(query.value) ?? true) &&
+      additionalIsValid.value
+    ),
   );
 
   const execute = (options?: DynamicFetchOptions): Promise<R> | undefined => {

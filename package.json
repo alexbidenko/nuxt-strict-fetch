@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",
@@ -35,8 +35,7 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.1.1",
-    "yup": "^1.7.0"
+    "@nuxt/kit": "^4.1.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.3",
@@ -53,5 +52,17 @@
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.6"
+  },
+  "peerDependencies": {
+    "yup": "> 1.5.0",
+    "zod": "> 4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "yup": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
   }
 }
