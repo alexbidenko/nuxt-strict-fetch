@@ -4,7 +4,7 @@ import {
   createResolver,
   addImportsDir,
   addServerImportsDir,
-  addTypeTemplate
+  addTypeTemplate,
 } from '@nuxt/kit';
 import { ValidatorOption } from './runtime/types';
 
@@ -45,23 +45,32 @@ export default defineNuxtModule<ModuleOptions>({
       switch (validator) {
         case ValidatorOption.YUP: {
           addTypeTemplate({
-            filename: 'types/nuxt-strict-fetch.d.ts',
+            filename: 'module/nuxt-strict-fetch.d.ts',
             src: resolver.resolve('./runtime/schemas/yup-validator.d.ts'),
           });
           break;
         }
         case ValidatorOption.ZOD: {
           addTypeTemplate({
-            filename: 'types/nuxt-strict-fetch.d.ts',
+            filename: 'module/nuxt-strict-fetch.d.ts',
             src: resolver.resolve('./runtime/schemas/zod-validator.d.ts'),
           });
           break;
         }
         default: {
           const _: never = validator;
-          return _;
         }
       }
+
+      nuxt.hooks.hook('prepare:types', ({ references }) => {
+        references.push({ path: resolve(nuxt.options.buildDir, 'module/nuxt-strict-fetch.d.ts') });
+      });
+      nuxt.hooks.hook('nitro:config', (config) => {
+        config.typescript = config.typescript || {};
+        config.typescript.tsConfig = config.typescript.tsConfig || {};
+        config.typescript.tsConfig.include = config.typescript.tsConfig.include || [];
+        config.typescript.tsConfig.include.push('./module/nuxt-strict-fetch.d.ts');
+      });
     }
   },
 });

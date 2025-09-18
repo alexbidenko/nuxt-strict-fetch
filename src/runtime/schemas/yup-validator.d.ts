@@ -13,4 +13,4 @@ declare module '#strict-fetch' {
   }
 }
 
-export {}
+export {};

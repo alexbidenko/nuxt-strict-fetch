@@ -149,6 +149,7 @@ const CommonAPI = {
   }),
 };
 ```
+
 > **Note**: To use schema validation, install either `yup` or `zod` as a dependency (`npm install yup` or `npm install zod`) and specify the validator in `nuxt.config.ts` under `strictFetch.validator` as `'yup'` or `'zod'`. This enables validation as described above.
 
 The validation schemas provide `useRequest` composable validation feature.
@@ -156,6 +157,7 @@ The validation schemas provide `useRequest` composable validation feature.
 ## Composables
 
 Module provides the following composable methods:
+
 - `useRequest` - method for using API method validation, state and TypeScript supporting for data.
 
 ```ts
@@ -351,6 +353,7 @@ npm run release
 ```
 
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-strict-fetch/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
 [npm-version-href]: https://npmjs.com/package/nuxt-strict-fetch
 [npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-strict-fetch.svg?style=flat&colorA=18181B&colorB=28CF8D

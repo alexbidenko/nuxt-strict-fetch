@@ -1,5 +1,5 @@
 import { useRuntimeConfig } from '#imports';
-import {Case, ValidatorOption} from './types';
+import { Case, ValidatorOption } from './types';
 import type {
   AbstractSchemas,
   RequestBodyInitialType,
@@ -11,7 +11,9 @@ import type {
 } from './types';
 import { caseTransfer, isObject } from './cases';
 
-export const mergeOptions = <B, P, Q>(...list: (StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[] | undefined)[]): StrictFetchOptions<B, P, Q> =>
+export const mergeOptions = <B, P, Q>(
+  ...list: (StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[] | undefined)[]
+): StrictFetchOptions<B, P, Q> =>
   list.reduce<StrictFetchOptions<B, P, Q>>((acc, options) => {
     const mergedOptions = Array.isArray(options) ? mergeOptions(...options) : options;
 
@@ -20,36 +22,50 @@ export const mergeOptions = <B, P, Q>(...list: (StrictFetchOptions<B, P, Q> | St
     return {
       ...acc,
       ...mergedOptions,
-      ...(acc.onRequest && mergedOptions.onRequest ? ({
-        onRequest: [
-          ...(Array.isArray(acc.onRequest) ? acc.onRequest : [acc.onRequest]),
-          ...(Array.isArray(mergedOptions.onRequest) ? mergedOptions.onRequest : [mergedOptions.onRequest]),
-        ],
-      }) : {}),
-      ...(acc.onResponse && mergedOptions.onResponse ? ({
-        onResponse: [
-          ...(Array.isArray(acc.onResponse) ? acc.onResponse : [acc.onResponse]),
-          ...(Array.isArray(mergedOptions.onResponse) ? mergedOptions.onResponse : [mergedOptions.onResponse]),
-        ],
-      }) : {}),
-      ...(acc.onRequestError && mergedOptions.onRequestError ? ({
-        onRequestError: [
-          ...(Array.isArray(acc.onRequestError) ? acc.onRequestError : [acc.onRequestError]),
-          ...(Array.isArray(mergedOptions.onRequestError) ? mergedOptions.onRequestError : [mergedOptions.onRequestError]),
-        ],
-      }) : {}),
-      ...(acc.onResponseError && mergedOptions.onResponseError ? ({
-        onResponseError: [
-          ...(Array.isArray(acc.onResponseError) ? acc.onResponseError : [acc.onResponseError]),
-          ...(Array.isArray(mergedOptions.onResponseError) ? mergedOptions.onResponseError : [mergedOptions.onResponseError]),
-        ],
-      }) : {}),
-      ...(acc.onError && mergedOptions.onError ? ({
-        onError: (error) => {
-          acc.onError?.(error);
-          mergedOptions.onError?.(error);
-        },
-      }) : {}),
+      ...(acc.onRequest && mergedOptions.onRequest
+        ? {
+            onRequest: [
+              ...(Array.isArray(acc.onRequest) ? acc.onRequest : [acc.onRequest]),
+              ...(Array.isArray(mergedOptions.onRequest) ? mergedOptions.onRequest : [mergedOptions.onRequest]),
+            ],
+          }
+        : {}),
+      ...(acc.onResponse && mergedOptions.onResponse
+        ? {
+            onResponse: [
+              ...(Array.isArray(acc.onResponse) ? acc.onResponse : [acc.onResponse]),
+              ...(Array.isArray(mergedOptions.onResponse) ? mergedOptions.onResponse : [mergedOptions.onResponse]),
+            ],
+          }
+        : {}),
+      ...(acc.onRequestError && mergedOptions.onRequestError
+        ? {
+            onRequestError: [
+              ...(Array.isArray(acc.onRequestError) ? acc.onRequestError : [acc.onRequestError]),
+              ...(Array.isArray(mergedOptions.onRequestError)
+                ? mergedOptions.onRequestError
+                : [mergedOptions.onRequestError]),
+            ],
+          }
+        : {}),
+      ...(acc.onResponseError && mergedOptions.onResponseError
+        ? {
+            onResponseError: [
+              ...(Array.isArray(acc.onResponseError) ? acc.onResponseError : [acc.onResponseError]),
+              ...(Array.isArray(mergedOptions.onResponseError)
+                ? mergedOptions.onResponseError
+                : [mergedOptions.onResponseError]),
+            ],
+          }
+        : {}),
+      ...(acc.onError && mergedOptions.onError
+        ? {
+            onError: (error) => {
+              acc.onError?.(error);
+              mergedOptions.onError?.(error);
+            },
+          }
+        : {}),
       // TODO: headers might be function for global dynamic headers (like Authorization header for example)
       headers: { ...acc.headers, ...mergedOptions.headers },
     };
@@ -87,14 +103,16 @@ export const prepareRequestBody = <B, P, Q, T extends RequestBodyInitialType = u
   return caseTransfer(body, Case.SNAKE);
 };
 
-const tryValidate = <T>(validate: (value: T) => unknown) => (value: T) => {
-  try {
-    validate(value);
-    return true;
-  } catch {
-    return false;
-  }
-};
+const tryValidate =
+  <T>(validate: (value: T) => unknown) =>
+  (value: T) => {
+    try {
+      validate(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
 export const getValidatorAdapter = <R, B, P, Q>(schemas?: AbstractSchemas): ValidatorAdapter<R, B, P, Q> | null => {
   const runtimeConfig = useRuntimeConfig();

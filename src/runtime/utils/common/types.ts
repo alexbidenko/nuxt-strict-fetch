@@ -106,7 +106,7 @@ export enum HTTPError {
   AbortError = 'AbortError',
 }
 
-export interface PrepareRequestSettings<R, B, P, Q> {
+export interface PrepareRequestSettings<_R, B, P, Q> {
   url: string | ((params: P) => string);
   method?: HTTPMethod;
   options?: StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[];

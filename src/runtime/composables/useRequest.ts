@@ -24,24 +24,14 @@ interface UseRequestReturnType<
 
 const useRequest: {
   <R>(request: PreparedRequestType<R>): UseRequestReturnType<R>;
-  <
-    R,
-    B extends RequestBodyInitialType,
-    P extends RequestParamsInitialType,
-    Q extends RequestQueryInitialType,
-  >(
+  <R, B extends RequestBodyInitialType, P extends RequestParamsInitialType, Q extends RequestQueryInitialType>(
     request: PreparedRequestType<R, B, P, Q>,
     parametersGetter: () => RequestParametersType<B, P, Q>,
     options?: {
       validation: () => boolean;
     },
   ): UseRequestReturnType<R, B, P, Q>;
-} = <
-  R,
-  B extends RequestBodyInitialType,
-  P extends RequestParamsInitialType,
-  Q extends RequestQueryInitialType,
->(
+} = <R, B extends RequestBodyInitialType, P extends RequestParamsInitialType, Q extends RequestQueryInitialType>(
   request: PreparedRequestType<R, B, P, Q>,
   parametersGetter?: () => RequestParametersType<B, P, Q>,
   options?: {
@@ -61,12 +51,11 @@ const useRequest: {
   const query = computed(() => ('query' in parameters.value ? parameters.value.query : undefined));
 
   const isValid = computed(
-    () => (
+    () =>
       (validator.value?.body?.isValid(body.value) ?? true) &&
       (validator.value?.params?.isValid(params.value) ?? true) &&
       (validator.value?.query?.isValid(query.value) ?? true) &&
-      additionalIsValid.value
-    ),
+      additionalIsValid.value,
   );
 
   const execute = (options?: DynamicFetchOptions): Promise<R> | undefined => {
@@ -84,6 +73,6 @@ const useRequest: {
     isLoading,
     parameters,
   };
-}
+};
 
 export default useRequest;

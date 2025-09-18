@@ -1,8 +1,10 @@
 import { array, boolean, object, string } from 'yup';
 
-const createItemBodySchema = object().required().shape({
-  name: string().required().min(2),
-});
+const createItemBodySchema = object()
+  .required()
+  .shape({
+    name: string().required().min(2),
+  });
 
 const createItemQuerySchema = object().required().shape({
   test: boolean().required(),
