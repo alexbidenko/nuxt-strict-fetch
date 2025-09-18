@@ -96,7 +96,7 @@ export interface PreparedRequestType<
   P extends RequestParamsInitialType = undefined,
   Q extends RequestQueryInitialType = undefined,
 > {
-  (parameters?: RequestParametersType<B, P, Q> | null, additionalOptions?: StrictFetchOptions): Promise<R>;
+  (parameters?: RequestParametersType<B, P, Q> | null, additionalOptions?: StrictFetchOptions<B, P, Q>): Promise<R>;
   schemas?: AbstractSchemas;
 }
 
@@ -106,7 +106,7 @@ export enum HTTPError {
   AbortError = 'AbortError',
 }
 
-export interface PrepareRequestSettings<_R, B, P, Q> {
+export interface PrepareRequestSettings<R, B, P, Q> {
   url: string | ((params: P) => string);
   method?: HTTPMethod;
   options?: StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[];
