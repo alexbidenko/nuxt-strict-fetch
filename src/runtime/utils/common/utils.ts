@@ -11,8 +11,8 @@ import type {
 } from './types';
 import { caseTransfer, isObject } from './cases';
 
-export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[] | undefined)[]): StrictFetchOptions =>
-  list.reduce<StrictFetchOptions>((acc, options) => {
+export const mergeOptions = <B, P, Q>(...list: (StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[] | undefined)[]): StrictFetchOptions<B, P, Q> =>
+  list.reduce<StrictFetchOptions<B, P, Q>>((acc, options) => {
     const mergedOptions = Array.isArray(options) ? mergeOptions(...options) : options;
 
     if (!mergedOptions) return acc;
@@ -44,6 +44,12 @@ export const mergeOptions = (...list: (StrictFetchOptions | StrictFetchOptions[]
           ...(Array.isArray(mergedOptions.onResponseError) ? mergedOptions.onResponseError : [mergedOptions.onResponseError]),
         ],
       }) : {}),
+      ...(acc.onError && mergedOptions.onError ? ({
+        onError: (error) => {
+          acc.onError?.(error);
+          mergedOptions.onError?.(error);
+        },
+      }) : {}),
       // TODO: headers might be function for global dynamic headers (like Authorization header for example)
       headers: { ...acc.headers, ...mergedOptions.headers },
     };
@@ -65,9 +71,9 @@ export const validateParameters = <
   return _parameters?.[field] && (_validator?.[field]?.validate(_parameters[field]) || _parameters[field] || undefined);
 };
 
-export const prepareRequestBody = <T extends RequestBodyInitialType = undefined>(
+export const prepareRequestBody = <B, P, Q, T extends RequestBodyInitialType = undefined>(
   body: T,
-  options: StrictFetchOptions,
+  options: StrictFetchOptions<B, P, Q>,
 ) => {
   if (!body || body instanceof FormData) return body;
   if (options.formData && isObject(body)) {

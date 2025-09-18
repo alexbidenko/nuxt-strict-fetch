@@ -38,11 +38,11 @@ export interface StrictFetchContext extends InitialFetchContext {}
 
 export interface DynamicFetchOptions extends Omit<InitialFetchOptions, 'method'> {}
 
-export interface StrictFetchOptions extends DynamicFetchOptions {
+export interface StrictFetchOptions<B = unknown, P = unknown, Q = unknown> extends DynamicFetchOptions {
   method?: HTTPMethod;
   orderKey?: string;
   groupKey?: string;
-  methodKey?: string;
+  methodKey?: string | ((parameters: RequestParametersType<B, P, Q>) => string);
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
   formData?: boolean;
@@ -109,7 +109,7 @@ export enum HTTPError {
 export interface PrepareRequestSettings<R, B, P, Q> {
   url: string | ((params: P) => string);
   method?: HTTPMethod;
-  options?: StrictFetchOptions | StrictFetchOptions[];
+  options?: StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[];
 }
 
 export interface IStrictFetch {

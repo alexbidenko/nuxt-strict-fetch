@@ -46,7 +46,7 @@ export class CommonStrictFetch implements IStrictFetch {
     },
   };
 
-  private setupDefaultOptions = (options: StrictFetchOptions | StrictFetchOptions[]) => {
+  private setupDefaultOptions = <B, P, Q>(options: StrictFetchOptions<B, P, Q> | StrictFetchOptions<B, P, Q>[]) => {
     const mergedOptions = mergeOptions(options);
 
     if (!mergedOptions.method) mergedOptions.methodKey = crypto.randomUUID();
@@ -54,11 +54,13 @@ export class CommonStrictFetch implements IStrictFetch {
     return mergedOptions;
   };
 
-  private execute = async <R>(
+  private execute = async <R, B, P, Q>(
     url: string,
-    { fetch = $fetch, orderKey, groupKey: _, methodKey, selfInterrupted, ...options }: StrictFetchOptions,
+    { fetch = $fetch, orderKey, groupKey: _, methodKey, selfInterrupted, ...options }: StrictFetchOptions<B, P, Q>,
     pluginOptions?: PluginOptionsType,
   ): Promise<R> => {
+    methodKey = typeof methodKey === 'function' ? methodKey(options as any) : methodKey;
+
     if (methodKey && pluginOptions) {
       pluginOptions.orderHooks[`method:${methodKey}:start`]?.forEach((el) => el());
       if (selfInterrupted) {
@@ -123,7 +125,7 @@ export class CommonStrictFetch implements IStrictFetch {
       const validator = getValidatorAdapter<R, B, P, Q>((rest as any).schemas);
       const config = this.config;
       const additionalHeaders = this.additionalHeaders;
-      const baseOptions = mergeOptions(
+      const baseOptions = mergeOptions<B, P, Q>(
         options,
         additionalOptions,
         runtimeConfig.public.strictFetchOptions,
@@ -137,7 +139,7 @@ export class CommonStrictFetch implements IStrictFetch {
           validateParameters(validator, parameters, 'query'),
         ]);
 
-        const data = await this.execute<R>(
+        const data = await this.execute<R, B, P, Q>(
           typeof url === 'function' ? url(params as P) : url,
           mergeOptions(baseOptions, {
             headers: additionalHeaders,

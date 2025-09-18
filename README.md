@@ -235,6 +235,7 @@ const options = {
     /* ... */
   }, // will be called on error but ignored 'AbortError' error
   methodKey: 'my-method', // key of method for subscribing
+  // methodKey: ({ body }) => `complex-method:${body.key}`, // or with function
   orderKey: 'my-order', // key of order for subscribing or ordering requests
   proxyServerCookies: true, // will send cookies from browser for common on server side
 };
