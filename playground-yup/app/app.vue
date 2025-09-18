@@ -3,6 +3,8 @@ const { data } = await useAsyncData(() => CommonAPI.list());
 
 const name = ref('');
 
+const simpleRequest = useRequest(CommonAPI.simple);
+
 const { execute, isValid, isLoading } = useRequest(CommonAPI.createItem, () => ({
   body: { name: name.value },
   query: { test: true },

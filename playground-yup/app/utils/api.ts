@@ -24,6 +24,10 @@ const jokeSchema = object().required().shape({
   punchline: string().required(),
 });
 
+const simpleResponseSchema = object().required().shape({
+  key: string().required(),
+});
+
 export const CommonAPI = {
   list: StrictFetch.prepare({
     url: 'list',
@@ -61,5 +65,9 @@ export const CommonAPI = {
         throw error;
       },
     },
+  }),
+  simple: StrictFetch.prepare({
+    url: 'simple',
+    schemas: { response: simpleResponseSchema },
   }),
 };

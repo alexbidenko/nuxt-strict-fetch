@@ -36,13 +36,10 @@ export interface AbstractSchemas {
 
 export interface StrictFetchContext extends InitialFetchContext {}
 
-export interface DynamicFetchOptions extends Omit<InitialFetchOptions, 'method'> {}
-
-export interface StrictFetchOptions<B = unknown, P = unknown, Q = unknown> extends DynamicFetchOptions {
+export interface SimpleFetchOptions extends Omit<InitialFetchOptions, 'method'> {
   method?: HTTPMethod;
   orderKey?: string;
   groupKey?: string;
-  methodKey?: string | ((parameters: RequestParametersType<B, P, Q>) => string);
   proxyServerCookies?: boolean;
   selfInterrupted?: boolean;
   formData?: boolean;
@@ -51,8 +48,12 @@ export interface StrictFetchOptions<B = unknown, P = unknown, Q = unknown> exten
   catch?: <R>(error: RequestError | ResponseError) => Promise<R>;
 }
 
+export interface StrictFetchOptions<B = undefined, P = undefined, Q = undefined> extends SimpleFetchOptions {
+  methodKey?: string | ((parameters: RequestParametersType<B, P, Q>) => string);
+}
+
 export interface PluginOptionsType {
-  options: StrictFetchOptions;
+  options: Omit<StrictFetchOptions, 'methodKey'>;
   orderRequests: Record<string, ((v: unknown) => void)[]>;
   orderHooks: Record<string, (() => void)[]>;
   methodSignals: Record<string, AbortController>;
