@@ -1,9 +1,8 @@
 export default defineNuxtConfig({
-  modules: ['../src/module'],
+  extends: '../_layer',
   strictFetch: {
     baseURL: '/api/',
     validator: 'yup',
   },
-  devtools: { enabled: true },
   compatibilityDate: '2025-09-09',
 });

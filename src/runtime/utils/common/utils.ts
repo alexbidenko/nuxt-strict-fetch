@@ -116,7 +116,7 @@ const tryValidate =
 
 export const getValidatorAdapter = <R, B, P, Q>(schemas?: AbstractSchemas): ValidatorAdapter<R, B, P, Q> | null => {
   const runtimeConfig = useRuntimeConfig();
-  const validator = <ValidatorOption | null>runtimeConfig.public.strictFetchOptions.validator;
+  const validator = <ValidatorOption | null>runtimeConfig.public.strictFetchOptions.validator ?? null;
 
   if (!validator) return null;
 
