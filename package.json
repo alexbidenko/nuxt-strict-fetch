@@ -56,6 +56,9 @@
     "vitest": "^3.2.4",
     "vue-tsc": "^3.1.1"
   },
+  "overrides": {
+    "@parcel/watcher-wasm": "file:stubs/parcel-watcher-wasm"
+  },
   "peerDependencies": {
     "yup": "> 1.5.0",
     "zod": "> 3.0.0"

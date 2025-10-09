@@ -1,0 +1,3 @@
+{
+  "extends": "../../playground-zod/tsconfig.json"
+}
