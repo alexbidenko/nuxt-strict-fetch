@@ -30,6 +30,10 @@ export default defineNuxtConfig({
 
 That's it! You can now use Nuxt Strict Fetch in your Nuxt app ✨
 
+## Testing
+
+This repository ships with Nuxt Test Utils + Vitest smoke suites that exercise the Strict Fetch plugin in browser, SSR and Nitro environments across the standard, Yup and Zod validator modes. Run `npm run test` to execute the matrix locally before contributing.
+
 ## Module Options
 
 ```ts
