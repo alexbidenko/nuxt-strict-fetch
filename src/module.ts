@@ -26,7 +26,7 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url);
 
     nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} };
-    nuxt.options.runtimeConfig.public.strictFetchOptions = options || {};
+    nuxt.options.runtimeConfig.public.strictFetchOptions = (options || {}) as any;
     nuxt.options.alias = nuxt.options.alias || {};
     nuxt.options.alias['#strict-fetch'] = resolve('./runtime/utils/common/types');
 

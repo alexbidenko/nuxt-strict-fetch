@@ -328,28 +328,28 @@ import type { StrictFetchOptions } from 'nuxt-strict-fetch/types';
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Generate type stubs
-npm run dev:prepare
+pnpm dev:prepare
 
 # Develop with the playground
-npm run dev
+pnpm dev
 
 # Build the playground
-npm run dev:build
+pnpm dev:build
 
 # Run Oxlint and Prettier
-npm run lint
-npm run lint:fix
-npm run format
+pnpm lint
+pnpm lint:fix
+pnpm format
 
 # Run Vitest
-npm run test
-npm run test:watch
+pnpm test
+pnpm test:watch
 
 # Release new version
-npm run release
+pnpm release
 ```
 
 <!-- Badges -->

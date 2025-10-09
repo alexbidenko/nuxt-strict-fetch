@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 import type {
-  DynamicFetchOptions,
+  SimpleFetchOptions,
   PreparedRequestType,
   RequestParametersType,
   RequestBodyInitialType,
@@ -16,7 +16,7 @@ interface UseRequestReturnType<
   P extends RequestParamsInitialType = undefined,
   Q extends RequestQueryInitialType = undefined,
 > {
-  execute: (options?: DynamicFetchOptions) => undefined | Promise<R>;
+  execute: (options?: SimpleFetchOptions) => undefined | Promise<R>;
   isValid: Ref<boolean>;
   isLoading: Ref<boolean>;
   parameters: Ref<RequestParametersType<B, P, Q>>;
@@ -58,7 +58,7 @@ const useRequest: {
       additionalIsValid.value,
   );
 
-  const execute = (options?: DynamicFetchOptions): Promise<R> | undefined => {
+  const execute = (options?: SimpleFetchOptions): Promise<R> | undefined => {
     if (!isValid.value || isLoading.value) return;
     isLoading.value = true;
 

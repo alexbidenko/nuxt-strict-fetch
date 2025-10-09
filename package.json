@@ -1,6 +1,6 @@
 {
   "name": "nuxt-strict-fetch",
-  "version": "1.2.5",
+  "version": "1.3.0",
   "description": "Nuxt Strict Fetch module",
   "author": "alexbidenko",
   "repository": "alexbidenko/nuxt-strict-fetch",
@@ -23,16 +23,17 @@
   "scripts": {
     "prepare": "nuxi prepare",
     "prepack": "nuxt-module-build build",
-    "dev": "nuxi dev playground",
-    "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "dev": "nuxi dev playground/base",
+    "dev:build": "nuxi build playground/base",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground/base",
+    "release": "pnpm run lint && pnpm run test && pnpm run prepack && changelogen --release && pnpm publish && git push --follow-tags",
     "format": "prettier --write .",
     "lint": "oxlint -c .oxlintrc.json --type-aware --format unix",
     "lint:fix": "pnpm run lint --fix --fix-suggestions",
+    "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground-yup && vue-tsc --noEmit && cd ../playground-zod && vue-tsc --noEmit"
+    "test:types": "pnpm -r --if-present typecheck"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.5",
@@ -68,5 +69,5 @@
       "optional": true
     }
   },
-  "packageManager": "npm@11.6.2"
+  "packageManager": "pnpm@10.18.1"
 }
