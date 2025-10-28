@@ -124,9 +124,10 @@ export class CommonStrictFetch implements IStrictFetch {
       const runtimeConfig = useRuntimeConfig();
       const validator = getValidatorAdapter<R, B, P, Q>((rest as any).schemas);
       const additionalHeaders = this.additionalHeaders;
+      const config = this.config;
       const baseOptions = mergeOptions<B, P, Q>(
         runtimeConfig.public.strictFetchOptions,
-        this.config.options,
+        config.options,
         options,
         additionalOptions,
       );
@@ -165,7 +166,7 @@ export class CommonStrictFetch implements IStrictFetch {
                 .with(context.error);
             },
           }),
-          this.config,
+          config,
         );
 
         const responseData = caseTransfer(data, Case.CAMEL);
