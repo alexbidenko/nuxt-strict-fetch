@@ -123,13 +123,12 @@ export class CommonStrictFetch implements IStrictFetch {
     const executor: PreparedRequestType<R, B, P, Q> = async (parameters, additionalOptions = {}) => {
       const runtimeConfig = useRuntimeConfig();
       const validator = getValidatorAdapter<R, B, P, Q>((rest as any).schemas);
-      const config = this.config;
       const additionalHeaders = this.additionalHeaders;
       const baseOptions = mergeOptions<B, P, Q>(
+        runtimeConfig.public.strictFetchOptions,
+        this.config.options,
         options,
         additionalOptions,
-        runtimeConfig.public.strictFetchOptions,
-        config.options,
       );
 
       try {
@@ -166,7 +165,7 @@ export class CommonStrictFetch implements IStrictFetch {
                 .with(context.error);
             },
           }),
-          config,
+          this.config,
         );
 
         const responseData = caseTransfer(data, Case.CAMEL);
