@@ -1,3 +1,9 @@
+useNodeVersion: 24.10.0
+
+frozenLockfile: true
+
+verifyDepsBeforeRun: install
+
 packages:
   - playground/*
 
